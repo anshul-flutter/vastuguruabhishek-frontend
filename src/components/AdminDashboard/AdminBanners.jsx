@@ -16,6 +16,7 @@ const AdminBanners = () => {
 		buttonText: "Learn More",
 		background: "#bb1401",
 		image: null,
+		isFullImageBanner: true,
 	});
 	const [imagePreview, setImagePreview] = useState(null);
 
@@ -58,6 +59,7 @@ const AdminBanners = () => {
 			buttonText: "Learn More",
 			background: "#bb1401",
 			image: null,
+			isFullImageBanner: true,
 		});
 		setImagePreview(null);
 		setEditingBanner(null);
@@ -72,6 +74,7 @@ const AdminBanners = () => {
 				buttonText: banner.buttonText || "Learn More",
 				background: banner.background || "#bb1401",
 				image: null,
+				isFullImageBanner: banner.isFullImageBanner || false,
 			});
 			setImagePreview(banner.image);
 		} else {
@@ -114,6 +117,12 @@ const AdminBanners = () => {
 		e.preventDefault();
 
 		if (!formData.title.trim() || !formData.description.trim()) {
+			return;
+		}
+
+		// Validate image is required for new banners
+		if (!editingBanner && !formData.image) {
+			alert("Please upload a banner image");
 			return;
 		}
 
@@ -210,36 +219,57 @@ const AdminBanners = () => {
 								className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200"
 							>
 								{/* Banner Preview */}
-								<div
-									className="h-48 p-4 text-white relative overflow-hidden"
-									style={{
-										background: banner.background,
-									}}
-								>
-									<div className="relative z-10">
-										<h3 className="text-lg font-semibold mb-2 line-clamp-2">
-											{banner.title}
-										</h3>
-										<p className="text-sm opacity-90 mb-3 line-clamp-2">
-											{banner.description}
-										</p>
-										<button
-											className="bg-white px-3 py-1 rounded text-xs font-medium"
-											style={{
-												color: getButtonTextColor(banner.background),
-											}}
-										>
-											{banner.buttonText}
-										</button>
+								{banner.isFullImageBanner ? (
+									<div className="h-48 relative overflow-hidden bg-gray-100">
+										{banner.image ? (
+											<>
+												<img
+													src={banner.image}
+													alt="Banner"
+													className="w-full h-full object-cover"
+												/>
+												<div className="absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-1 rounded">
+													Full Image
+												</div>
+											</>
+										) : (
+											<div className="w-full h-full flex items-center justify-center text-gray-400">
+												<FiImage className="w-12 h-12" />
+											</div>
+										)}
 									</div>
-									{banner.image && (
-										<img
-											src={banner.image}
-											alt="Banner"
-											className="absolute top-1/2 -right-4 transform -translate-y-1/2 w-24 h-24 rounded-full object-cover opacity-80"
-										/>
-									)}
-								</div>
+								) : (
+									<div
+										className="h-48 p-4 text-white relative overflow-hidden"
+										style={{
+											background: banner.background,
+										}}
+									>
+										<div className="relative z-10">
+											<h3 className="text-lg font-semibold mb-2 line-clamp-2">
+												{banner.title}
+											</h3>
+											<p className="text-sm opacity-90 mb-3 line-clamp-2">
+												{banner.description}
+											</p>
+											<button
+												className="bg-white px-3 py-1 rounded text-xs font-medium"
+												style={{
+													color: getButtonTextColor(banner.background),
+												}}
+											>
+												{banner.buttonText}
+											</button>
+										</div>
+										{banner.image && (
+											<img
+												src={banner.image}
+												alt="Banner"
+												className="absolute top-1/2 -right-4 transform -translate-y-1/2 w-24 h-24 rounded-full object-cover opacity-80"
+											/>
+										)}
+									</div>
+								)}
 
 								{/* Actions */}
 								<div className="p-4 bg-gray-50 flex justify-between items-center">
@@ -347,13 +377,14 @@ const AdminBanners = () => {
 
 								<div>
 									<label className="block text-sm font-medium text-gray-700 mb-2">
-										Banner Image
+										Banner Image *
 									</label>
 									<input
 										type="file"
 										accept="image/*"
 										onChange={handleImageChange}
 										className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+										required={!editingBanner}
 									/>
 									{imagePreview && (
 										<div className="mt-2">
@@ -366,41 +397,86 @@ const AdminBanners = () => {
 									)}
 								</div>
 
+								<div>
+									<label className="flex items-center gap-2 cursor-pointer">
+										<input
+											type="checkbox"
+											name="isFullImageBanner"
+											checked={formData.isFullImageBanner}
+											onChange={(e) =>
+												setFormData((prev) => ({
+													...prev,
+													isFullImageBanner: e.target.checked,
+												}))
+											}
+											className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
+										/>
+										<span className="text-sm font-medium text-gray-700">
+											Show as Full Image Banner
+										</span>
+									</label>
+									<p className="text-xs text-gray-500 mt-1 ml-6">
+										Enable this to display only the banner image without text
+										content
+									</p>
+								</div>
+
 								{/* Banner Preview */}
 								<div className="border rounded-lg p-4">
 									<h4 className="text-sm font-medium text-gray-700 mb-2">
 										Preview:
 									</h4>
-									<div
-										className="h-32 p-4 text-white relative overflow-hidden rounded-lg"
-										style={{
-											background: formData.background,
-										}}
-									>
-										<div className="relative z-10">
-											<h3 className="text-lg font-semibold mb-1 line-clamp-1">
-												{formData.title || "Banner Title"}
-											</h3>
-											<p className="text-sm opacity-90 mb-2 line-clamp-1">
-												{formData.description || "Banner description"}
-											</p>
-											<button
-												className="bg-white px-3 py-1 rounded text-xs font-medium"
-												style={{
-													color: getButtonTextColor(formData.background),
-												}}
-											>
-												{formData.buttonText || "Learn More"}
-											</button>
+									{formData.isFullImageBanner ? (
+										<div className="h-32 relative overflow-hidden rounded-lg bg-gray-100">
+											{imagePreview ? (
+												<img
+													src={imagePreview}
+													alt="Preview"
+													className="w-full h-full object-cover"
+												/>
+											) : (
+												<div className="w-full h-full flex items-center justify-center text-gray-400">
+													<div className="text-center">
+														<FiImage className="w-12 h-12 mx-auto mb-2" />
+														<p className="text-sm">
+															Upload image for full banner
+														</p>
+													</div>
+												</div>
+											)}
 										</div>
-										{imagePreview && (
-											<img
-												src={imagePreview}
-												alt="Preview"
-												className="absolute top-1/2 -right-2 transform -translate-y-1/2 w-16 h-16 rounded-full object-cover opacity-80"
-											/>
-										)}
-									</div>
+									) : (
+										<div
+											className="h-32 p-4 text-white relative overflow-hidden rounded-lg"
+											style={{
+												background: formData.background,
+											}}
+										>
+											<div className="relative z-10">
+												<h3 className="text-lg font-semibold mb-1 line-clamp-1">
+													{formData.title || "Banner Title"}
+												</h3>
+												<p className="text-sm opacity-90 mb-2 line-clamp-1">
+													{formData.description || "Banner description"}
+												</p>
+												<button
+													className="bg-white px-3 py-1 rounded text-xs font-medium"
+													style={{
+														color: getButtonTextColor(formData.background),
+													}}
+												>
+													{formData.buttonText || "Learn More"}
+												</button>
+											</div>
+											{imagePreview && (
+												<img
+													src={imagePreview}
+													alt="Preview"
+													className="absolute top-1/2 -right-2 transform -translate-y-1/2 w-16 h-16 rounded-full object-cover opacity-80"
+												/>
+											)}
+										</div>
+									)}
 								</div>
 
 								<div className="flex gap-3 pt-4">

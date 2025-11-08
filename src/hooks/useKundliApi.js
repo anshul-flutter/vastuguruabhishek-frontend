@@ -102,28 +102,59 @@ export const useGenerateKundli = ({ onSuccess, onError } = {}) => {
 export const useGetLocation = ({ onSuccess, onError } = {}) => {
 	return useMutation({
 		mutationFn: async (place) => {
-			// You can use a geocoding API here
-			// For now, we'll use a simple fetch to nominatim (OpenStreetMap)
-			const response = await fetch(
-				`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
-					place
-				)}&format=json&limit=1`
-			);
+			try {
+				// Use nominatim (OpenStreetMap) with proper headers and timeout
+				const controller = new AbortController();
+				const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-			if (!response.ok) {
-				throw new Error("Failed to fetch location");
+				const response = await fetch(
+					`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(
+						place
+					)}&format=json&limit=1&addressdetails=1`,
+					{
+						method: "GET",
+						headers: {
+							"User-Agent": "Vastu-Abhishek-App",
+							Accept: "application/json",
+						},
+						signal: controller.signal,
+					}
+				);
+
+				clearTimeout(timeoutId);
+
+				if (!response.ok) {
+					throw new Error(`Failed to fetch location: ${response.statusText}`);
+				}
+
+				const data = await response.json();
+				if (!data || data.length === 0) {
+					throw new Error(
+						"Location not found. Please try a different search term."
+					);
+				}
+
+				return {
+					latitude: data[0].lat,
+					longitude: data[0].lon,
+					displayName: data[0].display_name,
+				};
+			} catch (error) {
+				if (error.name === "AbortError") {
+					throw new Error(
+						"Request timeout. Please check your internet connection and try again."
+					);
+				}
+				if (
+					error.message.includes("Failed to fetch") ||
+					error.message.includes("NetworkError")
+				) {
+					throw new Error(
+						"Network error. Please check your internet connection."
+					);
+				}
+				throw error;
 			}
-
-			const data = await response.json();
-			if (data.length === 0) {
-				throw new Error("Location not found");
-			}
-
-			return {
-				latitude: data[0].lat,
-				longitude: data[0].lon,
-				displayName: data[0].display_name,
-			};
 		},
 		onSuccess: (data) => {
 			if (onSuccess) onSuccess(data);

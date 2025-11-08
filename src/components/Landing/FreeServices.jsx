@@ -33,14 +33,16 @@ const FreeServices = () => {
 								icon: icon3,
 								title: "Free Vastu courses",
 								color: "from-orange-500 to-orange-400",
-								path: "/courses?price=free",
+								url: "https://www.youtube.com/watch?v=avOuTWxFqEo&list=PLnAXf2e99Pr43Q14NqirgZLLsg5rikciq&pp=gAQB",
 							},
-						].map(({ icon, title, color, path }) => (
+						].map(({ icon, title, color, path, url }) => (
 							<div
 								key={title}
 								onClick={() => {
 									if (path) {
 										navigate(path);
+									} else if (url) {
+										window.open(url, "_blank");
 									}
 								}}
 								className={`flex justify-between items-center gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl text-white bg-gradient-to-r ${color} shadow-lg transition-transform transform hover:scale-105 hover:rotate-y-6 cursor-pointer relative overflow-hidden`}
@@ -54,9 +56,6 @@ const FreeServices = () => {
 										<h3 className="text-base sm:text-lg font-semibold truncate">
 											{title}
 										</h3>
-										<p className="text-xs sm:text-sm">
-											Lorem ipsum dolor sit amet.
-										</p>
 									</div>
 								</div>
 								<div className="h-[40px] w-[40px] sm:h-[50px] sm:w-[50px] absolute top-[70%] left-[40%] rounded-full bg-white/20" />
