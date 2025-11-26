@@ -21,11 +21,14 @@ const CourseContainer = ({
 	const courses = useMemo(() => {
 		let filtered = coursesData ?? [];
 
-		// Apply category filter
+		// Apply category filter (match by category OR title containing filter token)
 		if (filter && filter !== "All") {
-			filtered = filtered.filter(
-				(course) => course.category?.toLowerCase() === filter.toLowerCase()
-			);
+			const f = filter.toLowerCase();
+			filtered = filtered.filter((course) => {
+				const cat = course.category?.toLowerCase() || "";
+				const title = course.title?.toLowerCase() || "";
+				return cat === f || title.includes(f);
+			});
 		}
 
 		// Apply search filter

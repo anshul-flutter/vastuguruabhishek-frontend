@@ -156,7 +156,7 @@ const CourseDetails = () => {
 									onClick={() => navigate(`/course/${id}/sessions`)}
 									className="text-blue-600 hover:text-blue-800 text-sm font-medium"
 								>
-									View Course Sessions →
+									View Course Sessions & Material →
 								</button>
 								<span className="text-gray-300">|</span>
 								<button

@@ -60,8 +60,8 @@ const ReviewCard = ({ crsDetails, disableActions = false }) => {
 		}
 
 		if (isEnrolled) {
-			// Navigate to the course
-			navigate(`/course/${crsDetails._id}`);
+			// Navigate to course sessions details when already enrolled
+			navigate(`/course/${crsDetails._id}/sessions`);
 		} else if (isInCart) {
 			// Navigate to cart for checkout
 			navigate("/cart");
@@ -141,7 +141,7 @@ const ReviewCard = ({ crsDetails, disableActions = false }) => {
 					"Unavailable for Admins"
 				) : isEnrolled ? (
 					<span className="flex items-center justify-center gap-2">
-						<FaCheck /> Enrolled
+						<FaCheck /> Check Details
 					</span>
 				) : isInCart ? (
 					"Go to Cart & Checkout"
