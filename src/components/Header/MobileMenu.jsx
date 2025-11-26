@@ -29,8 +29,6 @@ const MobileMenu = ({ onClose }) => {
 									onClick={() => {
 										if (label === "Courses") {
 											handleNavigate("/courses");
-										} else if (label === "Products") {
-											handleNavigate("/products");
 										}
 									}}
 									className={`flex justify-between items-center py-[5px] px-3 rounded-md transition-colors duration-200 ${

@@ -27,6 +27,7 @@ const optionalUrlSchema = Yup.string()
 const validationSchema = Yup.object({
 	title: Yup.string().trim().required("Title is required"),
 	description: Yup.string().trim(),
+	link: optionalUrlSchema,
 	startTime: Yup.date()
 		.typeError("Start time is required")
 		.required("Start time is required"),
@@ -43,14 +44,6 @@ const validationSchema = Yup.object({
 		.typeError("Capacity must be a number")
 		.min(1, "Capacity must be at least 1"),
 	registrationRequired: Yup.boolean(),
-	isVirtual: Yup.boolean(),
-	location: Yup.string().trim(),
-	virtualPlatform: Yup.object({
-		name: Yup.string().trim(),
-		url: optionalUrlSchema,
-		liveStreaming: Yup.boolean(),
-		streamingUrl: optionalUrlSchema,
-	}),
 	organizer: Yup.object({
 		name: Yup.string().trim().required("Organizer name is required"),
 		email: Yup.string()
@@ -79,19 +72,12 @@ function CreateEvent() {
 		initialValues: {
 			title: "",
 			description: "",
+			link: "",
 			startTime: "",
 			endTime: "",
 			entryAmount: "",
 			capacity: "",
 			registrationRequired: true,
-			isVirtual: false,
-			location: "",
-			virtualPlatform: {
-				name: "",
-				url: "",
-				liveStreaming: false,
-				streamingUrl: "",
-			},
 			organizer: { name: "", email: "", contact: "" },
 			topics: [""],
 			resources: [""],
@@ -100,57 +86,18 @@ function CreateEvent() {
 		validationSchema,
 		validate: (values) => {
 			const errors = {};
-
-			if (!values.isVirtual && !values.location.trim()) {
-				errors.location = "Location is required for in-person events";
-			}
-
-			if (values.isVirtual && !values.virtualPlatform.name.trim()) {
-				errors.virtualPlatform = {
-					...(typeof errors.virtualPlatform === "object"
-						? errors.virtualPlatform
-						: {}),
-					name: "Platform name is required for virtual events",
-				};
-			}
-
-			if (
-				values.isVirtual &&
-				values.virtualPlatform.liveStreaming &&
-				!values.virtualPlatform.streamingUrl.trim()
-			) {
-				errors.virtualPlatform = {
-					...(typeof errors.virtualPlatform === "object"
-						? errors.virtualPlatform
-						: {}),
-					streamingUrl:
-						"Streaming URL is required when live streaming is enabled",
-				};
-			}
-
 			return errors;
 		},
 		onSubmit: (values) => {
 			const payload = {
 				title: normalizeString(values.title),
 				description: normalizeString(values.description),
+				link: normalizeOptionalString(values.link),
 				startTime: values.startTime,
 				endTime: values.endTime,
 				entryAmount: values.entryAmount ? Number(values.entryAmount) : 0,
 				capacity: values.capacity ? Number(values.capacity) : null,
 				registrationRequired: values.registrationRequired,
-				location: values.isVirtual ? "" : normalizeString(values.location),
-				isVirtual: values.isVirtual,
-				virtualPlatform: values.isVirtual
-					? {
-							name: normalizeString(values.virtualPlatform.name),
-							url: normalizeOptionalString(values.virtualPlatform.url),
-							liveStreaming: values.virtualPlatform.liveStreaming,
-							streamingUrl: values.virtualPlatform.liveStreaming
-								? normalizeOptionalString(values.virtualPlatform.streamingUrl)
-								: "",
-					  }
-					: {},
 				organizer: {
 					name: normalizeString(values.organizer.name),
 					email: normalizeString(values.organizer.email),
@@ -263,6 +210,19 @@ function CreateEvent() {
 						rows={3}
 					/>
 
+					<input
+						type="url"
+						name="link"
+						value={formik.values.link}
+						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
+						placeholder="Event Link (Optional)"
+						className="border border-gray-300 rounded-md p-3 w-full focus:ring-2 focus:ring-[#BB0E00] outline-none"
+					/>
+					{formik.touched.link && formik.errors.link && (
+						<p className="text-red-500 text-sm">{formik.errors.link}</p>
+					)}
+
 					<div className="flex flex-col sm:flex-row gap-4">
 						<div className="flex-1">
 							<input
@@ -342,118 +302,6 @@ function CreateEvent() {
 						/>
 						Registration Required
 					</label>
-
-					<div className="flex items-center gap-4">
-						<label className="flex items-center gap-2">
-							<input
-								type="checkbox"
-								name="isVirtual"
-								checked={formik.values.isVirtual}
-								onChange={(event) =>
-									handleBooleanToggle("isVirtual", event.target.checked)
-								}
-								className="accent-[#BB0E00]"
-							/>
-							Virtual Event
-						</label>
-					</div>
-
-					{!formik.values.isVirtual ? (
-						<div>
-							<input
-								type="text"
-								name="location"
-								value={formik.values.location}
-								onChange={formik.handleChange}
-								onBlur={formik.handleBlur}
-								placeholder="Event Location"
-								className="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-[#BB0E00] outline-none"
-							/>
-							{formik.errors.location &&
-								(formik.touched.location || formik.submitCount > 0) && (
-									<p className="text-red-500 text-sm">
-										{formik.errors.location}
-									</p>
-								)}
-						</div>
-					) : (
-						<div className="flex flex-col gap-2">
-							<input
-								type="text"
-								name="virtualPlatform.name"
-								value={formik.values.virtualPlatform.name}
-								onChange={(event) =>
-									formik.setFieldValue(
-										"virtualPlatform.name",
-										event.target.value
-									)
-								}
-								onBlur={formik.handleBlur}
-								placeholder="Platform Name"
-								className="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-[#BB0E00] outline-none"
-							/>
-							{formik.errors.virtualPlatform?.name &&
-								(formik.touched.virtualPlatform?.name ||
-									formik.submitCount > 0) && (
-									<p className="text-red-500 text-sm">
-										{formik.errors.virtualPlatform.name}
-									</p>
-								)}
-							<input
-								type="url"
-								name="virtualPlatform.url"
-								value={formik.values.virtualPlatform.url}
-								onChange={(event) =>
-									formik.setFieldValue(
-										"virtualPlatform.url",
-										event.target.value
-									)
-								}
-								onBlur={formik.handleBlur}
-								placeholder="Platform URL"
-								className="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-[#BB0E00] outline-none"
-							/>
-							<label className="flex items-center gap-2">
-								<input
-									type="checkbox"
-									checked={formik.values.virtualPlatform.liveStreaming}
-									onChange={(event) =>
-										formik.setFieldValue(
-											"virtualPlatform.liveStreaming",
-											event.target.checked
-										)
-									}
-									className="accent-[#BB0E00]"
-								/>
-								Live Streaming
-							</label>
-							{formik.values.virtualPlatform.liveStreaming && (
-								<div>
-									<input
-										type="url"
-										name="virtualPlatform.streamingUrl"
-										value={formik.values.virtualPlatform.streamingUrl}
-										onChange={(event) =>
-											formik.setFieldValue(
-												"virtualPlatform.streamingUrl",
-												event.target.value
-											)
-										}
-										onBlur={formik.handleBlur}
-										placeholder="Streaming URL"
-										className="border border-gray-300 rounded-md p-2 w-full focus:ring-2 focus:ring-[#BB0E00] outline-none"
-									/>
-									{formik.errors.virtualPlatform?.streamingUrl &&
-										(formik.touched.virtualPlatform?.streamingUrl ||
-											formik.submitCount > 0) && (
-											<p className="text-red-500 text-sm">
-												{formik.errors.virtualPlatform.streamingUrl}
-											</p>
-										)}
-								</div>
-							)}
-						</div>
-					)}
 
 					{["topics", "resources", "requirements"].map((field) => (
 						<div key={field} className="flex flex-col gap-2 mt-4">

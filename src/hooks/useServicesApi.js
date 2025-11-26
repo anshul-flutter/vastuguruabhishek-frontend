@@ -128,46 +128,4 @@ export const useDeleteServiceMutation = (options = {}) => {
 	});
 };
 
-// GET all packages (could be part of services or separate)
-export const usePackagesQuery = (options = {}) => {
-	const { queryKey = ["packages"], params, onError, ...queryOptions } = options;
-
-	return useQuery({
-		queryKey: params ? [...queryKey, params] : queryKey,
-		queryFn: async () => {
-			const response = await apiClient.get("/packages", { params });
-			return response.data?.data ?? [];
-		},
-		staleTime: 1000 * 60,
-		onError: (error) => {
-			const message = getErrorMessage(error, "Failed to fetch packages");
-			toast.error(message);
-			onError?.(error, message);
-		},
-		...queryOptions,
-	});
-};
-
-// DELETE package
-export const useDeletePackageMutation = (options = {}) => {
-	const queryClient = useQueryClient();
-	const { onSuccess, onError, ...mutationOptions } = options;
-
-	return useMutation({
-		mutationFn: async (packageId) => {
-			const response = await apiClient.delete(`/packages/${packageId}`);
-			return response.data;
-		},
-		onSuccess: (data, variables, context) => {
-			toast.success(data?.message ?? "Package deleted successfully");
-			queryClient.invalidateQueries({ queryKey: ["packages"] });
-			onSuccess?.(data, variables, context);
-		},
-		onError: (error, variables, context) => {
-			const message = getErrorMessage(error, "Failed to delete package");
-			toast.error(message);
-			onError?.(error, message, variables, context);
-		},
-		...mutationOptions,
-	});
-};
+// Note: Packages are fetched via useServicesQuery with params { serviceType: 'package' }

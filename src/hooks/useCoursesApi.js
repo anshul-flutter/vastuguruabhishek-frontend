@@ -171,3 +171,67 @@ export const useDeleteCourseMutation = (options = {}) => {
 		...mutationOptions,
 	});
 };
+
+export const useAddCourseMaterialMutation = (options = {}) => {
+	const queryClient = useQueryClient();
+	const { onSuccess, onError, ...mutationOptions } = options;
+
+	return useMutation({
+		mutationFn: async ({ courseId, formData }) => {
+			const response = await apiClient.post(
+				`/courses/${courseId}/materials`,
+				formData,
+				{
+					headers: { "Content-Type": "multipart/form-data" },
+				}
+			);
+			return response.data;
+		},
+		onSuccess: (data, variables, context) => {
+			toast.success(data?.message ?? "Material added successfully");
+			queryClient.invalidateQueries({
+				queryKey: ["courses", variables.courseId],
+			});
+			onSuccess?.(data, variables, context);
+		},
+		onError: (error, variables, context) => {
+			const message = getErrorMessage(
+				error,
+				"Failed to add material. Please try again."
+			);
+			toast.error(message);
+			onError?.(error, message, variables, context);
+		},
+		...mutationOptions,
+	});
+};
+
+export const useRemoveCourseMaterialMutation = (options = {}) => {
+	const queryClient = useQueryClient();
+	const { onSuccess, onError, ...mutationOptions } = options;
+
+	return useMutation({
+		mutationFn: async ({ courseId, materialId }) => {
+			const response = await apiClient.delete(
+				`/courses/${courseId}/materials/${materialId}`
+			);
+			return response.data;
+		},
+		onSuccess: (data, variables, context) => {
+			toast.success(data?.message ?? "Material removed successfully");
+			queryClient.invalidateQueries({
+				queryKey: ["courses", variables.courseId],
+			});
+			onSuccess?.(data, variables, context);
+		},
+		onError: (error, variables, context) => {
+			const message = getErrorMessage(
+				error,
+				"Failed to remove material. Please try again."
+			);
+			toast.error(message);
+			onError?.(error, message, variables, context);
+		},
+		...mutationOptions,
+	});
+};

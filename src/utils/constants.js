@@ -78,14 +78,8 @@ export const menuOptions = [
 			{ label: "Vastu For Factory/Commercial", path: "/vastu-industrial" },
 			{ label: "Numero Consultation", path: "/numero-consultation" },
 			{ label: "Astrology Consultation", path: "/astrology-consultation" },
-			{ label: "Vastu Consultation", path: "/vastu-consultation" },
 		],
 	},
-
-	// {
-	// 	label: "Services",
-	// 	path: "/services",
-	// },
 	{
 		label: "Courses",
 		path: "/courses",

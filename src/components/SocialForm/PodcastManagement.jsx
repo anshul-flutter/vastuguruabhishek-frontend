@@ -4,13 +4,19 @@ import { useState } from "react";
 import { usePodcastsQuery } from "../../hooks/useContentApi";
 import PodcastFormModal from "./PodcastFormModal";
 
-function PodcastManagement() {
+function PodcastManagement({ type = "podcast" }) {
 	const navigate = useNavigate();
 	const [searchTerm, setSearchTerm] = useState("");
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingPodcast, setEditingPodcast] = useState(null);
 
-	const { data: podcasts = [], isLoading, error } = usePodcastsQuery();
+	const {
+		data: podcasts = [],
+		isLoading,
+		error,
+	} = usePodcastsQuery({
+		params: { type },
+	});
 
 	console.log("Podcasts data:", podcasts);
 
@@ -33,6 +39,8 @@ function PodcastManagement() {
 		navigate(`/admin/podcast-details/${podcastId}`);
 	};
 
+	const title = type === "free_course" ? "Free Courses" : "Podcast";
+
 	if (isLoading) {
 		return (
 			<div className="flex justify-center items-center min-h-[400px]">
@@ -44,9 +52,7 @@ function PodcastManagement() {
 	if (error) {
 		return (
 			<div className="flex justify-center items-center min-h-[400px]">
-				<p className="text-red-600">
-					Error loading podcasts. Please try again.
-				</p>
+				<p className="text-red-600">Error loading content. Please try again.</p>
 			</div>
 		);
 	}
@@ -55,12 +61,12 @@ function PodcastManagement() {
 		<div className="p-4 sm:p-6">
 			{/* Header */}
 			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-				<h1 className="text-2xl font-bold text-gray-900">Podcast Management</h1>
+				<h1 className="text-2xl font-bold text-gray-900">{title} Management</h1>
 				<button
 					onClick={handleAddPodcast}
 					className="px-6 py-2 bg-[#BB0E00] text-white rounded-lg hover:bg-[#A00D00] transition-colors font-semibold"
 				>
-					Add New Podcast
+					Add New {title}
 				</button>
 			</div>
 
@@ -68,7 +74,7 @@ function PodcastManagement() {
 			<div className="mb-6">
 				<input
 					type="text"
-					placeholder="Search podcasts by title..."
+					placeholder={`Search ${title.toLowerCase()}s by title...`}
 					value={searchTerm}
 					onChange={(e) => setSearchTerm(e.target.value)}
 					className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB0E00] focus:border-transparent"
@@ -78,12 +84,12 @@ function PodcastManagement() {
 			{/* Podcast List */}
 			{filteredPodcasts.length === 0 ? (
 				<div className="text-center py-12 bg-gray-50 rounded-lg">
-					<p className="text-gray-500 mb-4">No podcasts found</p>
+					<p className="text-gray-500 mb-4">No {title.toLowerCase()}s found</p>
 					<button
 						onClick={handleAddPodcast}
 						className="px-6 py-2 bg-[#BB0E00] text-white rounded-lg hover:bg-[#A00D00] transition-colors"
 					>
-						Add your first podcast
+						Add your first {title.toLowerCase()}
 					</button>
 				</div>
 			) : (
@@ -103,7 +109,7 @@ function PodcastManagement() {
 										</div>
 									</div>
 									<p className="text-white text-sm font-semibold absolute bottom-2 left-2 bg-black bg-opacity-50 px-2 py-1 rounded">
-										Video/Podcast
+										Video/{title}
 									</p>
 								</div>
 							)}
@@ -179,6 +185,7 @@ function PodcastManagement() {
 					setIsModalOpen(false);
 					setEditingPodcast(null);
 				}}
+				type={type}
 			/>
 		</div>
 	);

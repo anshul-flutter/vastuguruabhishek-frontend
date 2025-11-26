@@ -4,6 +4,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import LoadingOverlay from "../components/common/LoadingOverlay";
 import { useCourseQuery } from "../hooks/useCoursesApi";
 import { useCourseEnrolledStudentsQuery } from "../hooks/useAdminApi";
+import CourseMaterialsManager from "../components/AdminCourses/CourseMaterialsManager";
 
 export default function CourseDetailPage() {
 	const { courseId } = useParams();
@@ -176,6 +177,12 @@ export default function CourseDetailPage() {
 					</div>
 				</div>
 			</div>
+
+			{/* Course Materials Section */}
+			<CourseMaterialsManager
+				courseId={courseId}
+				materials={course.materials || []}
+			/>
 
 			{/* Enrolled Students Section */}
 			<div className="rounded-xl border border-[#E1E1E1] bg-white p-6">

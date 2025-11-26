@@ -102,12 +102,28 @@ const Hero = () => {
 						{slide.isFullImageBanner && slide.image ? (
 							// Full Image Banner Mode
 							<div className="h-[30vh] sm:h-[40vh] md:h-[70vh] w-screen relative overflow-hidden">
-								<img
-									src={slide.image}
-									alt={slide.title || "Banner"}
-									className="w-full h-full object-fill"
-									loading="lazy"
-								/>
+								{slide.link ? (
+									<a
+										href={slide.link}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="block w-full h-full"
+									>
+										<img
+											src={slide.image}
+											alt={slide.title || "Banner"}
+											className="w-full h-full object-fill"
+											loading="lazy"
+										/>
+									</a>
+								) : (
+									<img
+										src={slide.image}
+										alt={slide.title || "Banner"}
+										className="w-full h-full object-fill"
+										loading="lazy"
+									/>
+								)}
 							</div>
 						) : (
 							// Default Banner Mode with Text and Image
@@ -125,16 +141,29 @@ const Hero = () => {
 										<p className="text-xs sm:text-base md:text-lg opacity-90 leading-relaxed max-w-2xl mb-6 sm:mb-8">
 											{slide.description}
 										</p>
-										{slide.buttonText && (
-											<button
-												className="bg-white cursor-pointer px-6 sm:px-8 py-2 rounded-md text-sm sm:text-lg font-semibold hover:bg-gray-100 transform hover:scale-105 transition-all duration-300"
-												style={{
-													color: getButtonTextColor(slide.background),
-												}}
-											>
-												{slide.buttonText}
-											</button>
-										)}
+										{slide.buttonText &&
+											(slide.link ? (
+												<a
+													href={slide.link}
+													target="_blank"
+													rel="noopener noreferrer"
+													className="inline-block bg-white cursor-pointer px-6 sm:px-8 py-2 rounded-md text-sm sm:text-lg font-semibold hover:bg-gray-100 transform hover:scale-105 transition-all duration-300"
+													style={{
+														color: getButtonTextColor(slide.background),
+													}}
+												>
+													{slide.buttonText}
+												</a>
+											) : (
+												<button
+													className="bg-white cursor-pointer px-6 sm:px-8 py-2 rounded-md text-sm sm:text-lg font-semibold hover:bg-gray-100 transform hover:scale-105 transition-all duration-300"
+													style={{
+														color: getButtonTextColor(slide.background),
+													}}
+												>
+													{slide.buttonText}
+												</button>
+											))}
 									</div>
 								</div>
 

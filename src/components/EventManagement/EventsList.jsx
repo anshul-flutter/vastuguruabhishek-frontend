@@ -9,18 +9,11 @@ const EventsList = () => {
 	// Filters
 	const [search, setSearch] = useState("");
 	const [onlyUpcoming, setOnlyUpcoming] = useState(false);
-	const [type, setType] = useState(""); // all | virtual | in-person
 
 	// Data
 	const { data: events = [], isLoading } = useEventsQuery({
 		params: {
 			upcoming: onlyUpcoming ? "true" : undefined,
-			isVirtual:
-				type === "virtual"
-					? "true"
-					: type === "in-person"
-					? "false"
-					: undefined,
 		},
 	});
 
@@ -74,6 +67,7 @@ const EventsList = () => {
 		const payload = {
 			title: selectedEvent.title,
 			description: selectedEvent.description,
+			link: selectedEvent.link,
 			startTime: selectedEvent.startTime,
 			endTime: selectedEvent.endTime,
 			entryAmount: Number(selectedEvent.entryAmount) || 0,
@@ -85,12 +79,6 @@ const EventsList = () => {
 				typeof selectedEvent.registrationRequired === "boolean"
 					? selectedEvent.registrationRequired
 					: true,
-			location: selectedEvent.location,
-			isVirtual:
-				typeof selectedEvent.isVirtual === "boolean"
-					? selectedEvent.isVirtual
-					: false,
-			virtualPlatform: selectedEvent.virtualPlatform ?? {},
 			organizer: selectedEvent.organizer ?? {},
 			topics: selectedEvent.topics ?? [],
 			resources: selectedEvent.resources ?? [],
@@ -153,15 +141,6 @@ const EventsList = () => {
 					value={search}
 					onChange={(e) => setSearch(e.target.value)}
 				/>
-				<select
-					value={type}
-					onChange={(e) => setType(e.target.value)}
-					className="border rounded px-3 py-2 text-sm"
-				>
-					<option value="">All Types</option>
-					<option value="virtual">Virtual</option>
-					<option value="in-person">In-person</option>
-				</select>
 				<label className="text-sm flex items-center gap-2">
 					<input
 						type="checkbox"
@@ -179,7 +158,6 @@ const EventsList = () => {
 			) : (
 				<div className="space-y-4 max-h-[500px] overflow-y-auto hide-scrollbar">
 					{filtered.map((event) => {
-						const isVirtual = !!event.isVirtual;
 						const timeRange = `${new Date(
 							event.startTime
 						).toLocaleString()} - ${new Date(event.endTime).toLocaleString()}`;
@@ -206,16 +184,6 @@ const EventsList = () => {
 											</p>
 											<div className="text-xs text-gray-500 mt-2 flex flex-wrap gap-3">
 												<span>📅 {timeRange}</span>
-												{isVirtual ? (
-													<span>
-														🖥️ Virtual{" "}
-														{event.virtualPlatform?.name
-															? `(${event.virtualPlatform.name})`
-															: ""}
-													</span>
-												) : (
-													<span>📍 {event.location || "TBD"}</span>
-												)}
 												{typeof event.entryAmount === "number" && (
 													<span>🎟️ ₹{event.entryAmount}</span>
 												)}
@@ -304,6 +272,14 @@ const EventsList = () => {
 								placeholder="Event Description"
 							/>
 							<input
+								type="url"
+								name="link"
+								value={selectedEvent.link || ""}
+								onChange={handleInputChange}
+								className="w-full border rounded p-2 text-sm"
+								placeholder="Event Link (Optional)"
+							/>
+							<input
 								type="datetime-local"
 								name="startTime"
 								value={selectedEvent.startTime?.slice(0, 16) || ""}
@@ -332,14 +308,6 @@ const EventsList = () => {
 								onChange={handleInputChange}
 								className="w-full border rounded p-2 text-sm"
 								placeholder="Capacity"
-							/>
-							<input
-								type="text"
-								name="location"
-								value={selectedEvent.location ?? ""}
-								onChange={handleInputChange}
-								className="w-full border rounded p-2 text-sm"
-								placeholder="Location"
 							/>
 
 							{/* Organizer */}
@@ -370,56 +338,6 @@ const EventsList = () => {
 								}
 								className="w-full border rounded p-2 text-sm"
 								placeholder="Organizer Contact"
-							/>
-
-							{/* Virtual Platform */}
-							<h3 className="font-medium mt-4">Virtual Platform</h3>
-							<input
-								type="text"
-								value={selectedEvent.virtualPlatform?.name || ""}
-								onChange={(e) =>
-									handleNestedChange("virtualPlatform", "name", e.target.value)
-								}
-								className="w-full border rounded p-2 text-sm"
-								placeholder="Platform Name"
-							/>
-							<input
-								type="url"
-								value={selectedEvent.virtualPlatform?.url || ""}
-								onChange={(e) =>
-									handleNestedChange("virtualPlatform", "url", e.target.value)
-								}
-								className="w-full border rounded p-2 text-sm"
-								placeholder="Platform URL"
-							/>
-							<label className="flex items-center gap-2 text-sm">
-								<input
-									type="checkbox"
-									checked={
-										selectedEvent.virtualPlatform?.liveStreaming || false
-									}
-									onChange={(e) =>
-										handleNestedChange(
-											"virtualPlatform",
-											"liveStreaming",
-											e.target.checked
-										)
-									}
-								/>
-								Live Streaming Available
-							</label>
-							<input
-								type="url"
-								value={selectedEvent.virtualPlatform?.streamingUrl || ""}
-								onChange={(e) =>
-									handleNestedChange(
-										"virtualPlatform",
-										"streamingUrl",
-										e.target.value
-									)
-								}
-								className="w-full border rounded p-2 text-sm"
-								placeholder="Streaming URL"
 							/>
 						</div>
 

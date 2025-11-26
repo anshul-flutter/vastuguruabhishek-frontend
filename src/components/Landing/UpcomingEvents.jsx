@@ -92,21 +92,34 @@ const UpcomingEvents = () => {
 
 						{/* Circular Event Image */}
 						<div className="w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-3 sm:mb-4 rounded-full border-2 border-white shadow-lg overflow-hidden transform transition-transform duration-700 hover:rotate-3 hover:scale-105">
-							<img
-								src={currentEvent.thumbnail || "/images/event.png"}
-								alt="Event"
-								className="w-full h-full object-cover"
-								loading="lazy"
-							/>
+							{currentEvent.link ? (
+								<a
+									href={currentEvent.link}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="block w-full h-full"
+								>
+									<img
+										src={currentEvent.thumbnail || "/images/event.png"}
+										alt="Event"
+										className="w-full h-full object-cover"
+										loading="lazy"
+									/>
+								</a>
+							) : (
+								<img
+									src={currentEvent.thumbnail || "/images/event.png"}
+									alt="Event"
+									className="w-full h-full object-cover"
+									loading="lazy"
+								/>
+							)}
 						</div>
 
 						{/* Event Details */}
 						<p className="text-white font-semibold text-sm sm:text-base">
 							<strong>Date:</strong>{" "}
 							{new Date(currentEvent.startTime).toLocaleDateString()}
-						</p>
-						<p className="text-white font-semibold text-sm sm:text-base truncate">
-							<strong>Location:</strong> {currentEvent.location}
 						</p>
 					</div>
 
@@ -118,6 +131,16 @@ const UpcomingEvents = () => {
 						<p className="text-gray-700 leading-tight text-sm sm:text-base">
 							{currentEvent.description}
 						</p>
+						{currentEvent.link && (
+							<a
+								href={currentEvent.link}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="inline-block mt-4 bg-[#BB0E00] text-white px-6 py-2 rounded-md font-semibold hover:bg-[#a00c00] transition-colors"
+							>
+								View Details
+							</a>
+						)}
 					</div>
 				</div>
 			</div>

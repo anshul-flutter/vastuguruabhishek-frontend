@@ -23,7 +23,11 @@ function PodcastDetails() {
 	});
 
 	const handleBack = () => {
-		navigate("/podcast");
+		if (podcast?.type === "free_course") {
+			navigate("/free-courses");
+		} else {
+			navigate("/podcast");
+		}
 	};
 
 	if (isLoading) {
@@ -59,6 +63,9 @@ function PodcastDetails() {
 
 	const embedUrl = getYouTubeEmbedUrl(podcast?.url);
 
+	const backText =
+		podcast?.type === "free_course" ? "Back to Free Courses" : "Back to Videos";
+
 	return (
 		<div className="min-h-screen bg-gray-50">
 			<div className="container mx-auto px-4 py-8">
@@ -69,7 +76,7 @@ function PodcastDetails() {
 						className="px-4 py-2 text-gray-600 hover:text-gray-900 flex items-center gap-2 transition-colors"
 					>
 						<FiArrowLeft className="w-4 h-4" />
-						Back to Videos
+						{backText}
 					</button>
 				</div>
 
@@ -180,7 +187,9 @@ function PodcastDetails() {
 						onClick={handleBack}
 						className="px-6 py-3 bg-[#c02c07] text-white rounded-lg hover:bg-[#a02306] transition-colors"
 					>
-						View More Videos
+						{podcast?.type === "free_course"
+							? "View More Free Courses"
+							: "View More Videos"}
 					</button>
 				</div>
 			</div>

@@ -4,6 +4,7 @@ import Services from "../components/Landing/Services";
 import PremiumServices from "../components/Landing/PremiumServices";
 import LazyLoadWrapper from "../components/Landing/LazyLoadWrapper";
 import "../App.css";
+import { useHomeContentQuery } from "../hooks/useHomeContentQuery";
 
 // Lazy load components that aren't immediately visible
 const FreeServices = lazy(() => import("../components/Landing/FreeServices"));
@@ -29,12 +30,25 @@ const SectionSkeleton = ({ height = "400px" }) => (
 );
 
 const Landing = () => {
+	const { data: homeContent, isLoading, error } = useHomeContentQuery();
+	const servicesData = homeContent?.servicesSection || null;
+	const premiumData = homeContent?.premiumSection || null;
+	const freeData = homeContent?.freeSection || null;
+
 	return (
 		<>
 			{/* Immediately visible sections - load immediately */}
 			<Hero />
-			<Services />
-			<PremiumServices />
+			<Services
+				content={servicesData}
+				loading={isLoading}
+				error={error?.message}
+			/>
+			<PremiumServices
+				content={premiumData}
+				loading={isLoading}
+				error={error?.message}
+			/>
 
 			{/* Lazy load sections below the fold */}
 			<LazyLoadWrapper
@@ -42,7 +56,11 @@ const Landing = () => {
 				delay={100}
 			>
 				<Suspense fallback={<SectionSkeleton height="300px" />}>
-					<FreeServices />
+					<FreeServices
+						content={freeData}
+						loading={isLoading}
+						error={error?.message}
+					/>
 				</Suspense>
 			</LazyLoadWrapper>
 
@@ -60,7 +78,7 @@ const Landing = () => {
 				delay={300}
 			>
 				<Suspense fallback={<SectionSkeleton height="400px" />}>
-					<Podcasts />
+					<Podcasts isHomePage={true} />
 				</Suspense>
 			</LazyLoadWrapper>
 

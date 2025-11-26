@@ -53,6 +53,7 @@ const createLanguageOption = () => ({
 	stock: 0,
 	buyLink: "",
 	available: true,
+	purchaseMode: "internal", // internal | external
 });
 
 function CreateBook() {
@@ -105,8 +106,14 @@ function CreateBook() {
 				targetAudience: sanitizeCommaSeparated(values.targetAudience),
 				languageOptions: values.languageOptions.map((option) => ({
 					language: option.language.trim(),
-					stock: Number(option.stock) || 0,
-					buyLink: option.buyLink ? option.buyLink.trim() : "",
+					stock:
+						option.purchaseMode === "external" ? 0 : Number(option.stock) || 0,
+					buyLink:
+						option.purchaseMode === "external"
+							? option.buyLink
+								? option.buyLink.trim()
+								: ""
+							: "",
 					available: Boolean(option.available),
 				})),
 			};
@@ -361,38 +368,84 @@ function CreateBook() {
 										placeholder="Language"
 										className="border border-gray-300 rounded-md p-2 flex-1 focus:ring-2 focus:ring-[#BB0E00] outline-none"
 									/>
-									<input
-										type="number"
-										value={lang.stock}
-										min={0}
-										onChange={(event) => {
-											const updated = [...formik.values.languageOptions];
-											updated[index] = {
-												...updated[index],
-												stock: Number(event.target.value),
-											};
-											formik.setFieldValue("languageOptions", updated);
-										}}
-										onBlur={formik.handleBlur}
-										placeholder="Stock"
-										className="border border-gray-300 rounded-md p-2 w-full sm:w-28 focus:ring-2 focus:ring-[#BB0E00] outline-none"
-									/>
-									<input
-										type="text"
-										value={lang.buyLink}
-										onChange={(event) => {
-											const updated = [...formik.values.languageOptions];
-											updated[index] = {
-												...updated[index],
-												buyLink: event.target.value,
-											};
-											formik.setFieldValue("languageOptions", updated);
-										}}
-										onBlur={formik.handleBlur}
-										placeholder="Buy Link"
-										className="border border-gray-300 rounded-md p-2 flex-1 focus:ring-2 focus:ring-[#BB0E00] outline-none"
-									/>
 								</div>
+
+								<div className="flex items-center gap-4 my-2">
+									<label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+										<input
+											type="radio"
+											name={`purchaseMode-${index}`}
+											checked={lang.purchaseMode === "internal"}
+											onChange={() => {
+												const updated = [...formik.values.languageOptions];
+												updated[index] = {
+													...updated[index],
+													purchaseMode: "internal",
+													buyLink: "", // Clear buy link when switching to internal
+												};
+												formik.setFieldValue("languageOptions", updated);
+											}}
+											className="text-[#BB0E00] focus:ring-[#BB0E00]"
+										/>
+										Sell on Website
+									</label>
+									<label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+										<input
+											type="radio"
+											name={`purchaseMode-${index}`}
+											checked={lang.purchaseMode === "external"}
+											onChange={() => {
+												const updated = [...formik.values.languageOptions];
+												updated[index] = {
+													...updated[index],
+													purchaseMode: "external",
+													stock: 0, // Clear stock when switching to external
+												};
+												formik.setFieldValue("languageOptions", updated);
+											}}
+											className="text-[#BB0E00] focus:ring-[#BB0E00]"
+										/>
+										External Link
+									</label>
+								</div>
+
+								<div className="flex flex-col sm:flex-row gap-2">
+									{lang.purchaseMode === "internal" ? (
+										<input
+											type="number"
+											value={lang.stock}
+											min={0}
+											onChange={(event) => {
+												const updated = [...formik.values.languageOptions];
+												updated[index] = {
+													...updated[index],
+													stock: Number(event.target.value),
+												};
+												formik.setFieldValue("languageOptions", updated);
+											}}
+											onBlur={formik.handleBlur}
+											placeholder="Stock"
+											className="border border-gray-300 rounded-md p-2 w-full sm:w-28 focus:ring-2 focus:ring-[#BB0E00] outline-none"
+										/>
+									) : (
+										<input
+											type="text"
+											value={lang.buyLink}
+											onChange={(event) => {
+												const updated = [...formik.values.languageOptions];
+												updated[index] = {
+													...updated[index],
+													buyLink: event.target.value,
+												};
+												formik.setFieldValue("languageOptions", updated);
+											}}
+											onBlur={formik.handleBlur}
+											placeholder="Buy Link (e.g., Amazon URL)"
+											className="border border-gray-300 rounded-md p-2 flex-1 focus:ring-2 focus:ring-[#BB0E00] outline-none"
+										/>
+									)}
+								</div>
+
 								<div className="flex items-center justify-between">
 									<label className="flex items-center gap-2 text-sm text-gray-600">
 										<input

@@ -25,6 +25,18 @@ export default function BookCard({ book, onClick }) {
 			return;
 		}
 
+		// Check for external link if single option
+		if (book.languageOptions?.length === 1 && book.languageOptions[0].buyLink) {
+			window.open(book.languageOptions[0].buyLink, "_blank");
+			return;
+		}
+
+		// If multiple options, redirect to details
+		if (book.languageOptions?.length > 1) {
+			onClick(); // Navigate to details
+			return;
+		}
+
 		const productId = book._id ?? book.id;
 		if (!productId) {
 			toast.error("Missing book identifier. Please try again later.");
@@ -36,7 +48,11 @@ export default function BookCard({ book, onClick }) {
 			quantity: 1,
 			kind: book.kind ?? "Book",
 		});
-	}, [addToCart, book, isAdmin]);
+	}, [addToCart, book, isAdmin, onClick]);
+
+	const isExternal =
+		book.languageOptions?.length === 1 && !!book.languageOptions[0].buyLink;
+	const hasMultipleOptions = (book.languageOptions?.length ?? 0) > 1;
 
 	return (
 		<div className="flex flex-col justify-between p-2 bg-white shadow-lg rounded-md">
@@ -63,14 +79,22 @@ export default function BookCard({ book, onClick }) {
 				</button>
 				<button
 					onClick={handleAddToCart}
-					disabled={isPending || isAdmin}
+					disabled={(!isExternal && isPending) || isAdmin}
 					className={`flex-1 py-[5px] rounded-md cursor-pointer bg-amber-800 text-white transition-opacity ${
-						isPending || isAdmin
+						(!isExternal && isPending) || isAdmin
 							? "opacity-60 cursor-not-allowed"
 							: "hover:opacity-90"
 					}`}
 				>
-					{isAdmin ? "Admin Only" : isPending ? "Adding..." : "Add to Cart"}
+					{isAdmin
+						? "Admin Only"
+						: isExternal
+						? "Buy Online"
+						: hasMultipleOptions
+						? "View Options"
+						: isPending
+						? "Adding..."
+						: "Add to Cart"}
 				</button>
 			</div>
 		</div>

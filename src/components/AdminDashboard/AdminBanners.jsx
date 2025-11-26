@@ -14,6 +14,7 @@ const AdminBanners = () => {
 		title: "",
 		description: "",
 		buttonText: "Learn More",
+		link: "",
 		background: "#bb1401",
 		image: null,
 		isFullImageBanner: true,
@@ -57,6 +58,7 @@ const AdminBanners = () => {
 			title: "",
 			description: "",
 			buttonText: "Learn More",
+			link: "",
 			background: "#bb1401",
 			image: null,
 			isFullImageBanner: true,
@@ -72,6 +74,7 @@ const AdminBanners = () => {
 				title: banner.title,
 				description: banner.description,
 				buttonText: banner.buttonText || "Learn More",
+				link: banner.link || "",
 				background: banner.background || "#bb1401",
 				image: null,
 				isFullImageBanner: banner.isFullImageBanner || false,
@@ -359,6 +362,20 @@ const AdminBanners = () => {
 										onChange={handleInputChange}
 										className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
 										placeholder="Learn More"
+									/>
+								</div>
+
+								<div>
+									<label className="block text-sm font-medium text-gray-700 mb-2">
+										Link (Optional)
+									</label>
+									<input
+										type="url"
+										name="link"
+										value={formData.link}
+										onChange={handleInputChange}
+										className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+										placeholder="https://example.com"
 									/>
 								</div>
 

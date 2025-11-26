@@ -5,7 +5,7 @@ import {
 	useDeletePodcastMutation,
 } from "../../hooks/useContentApi";
 
-function PodcastFormModal({ podcast, isOpen, onClose }) {
+function PodcastFormModal({ podcast, isOpen, onClose, type = "podcast" }) {
 	const [formData, setFormData] = useState({
 		title: "",
 		description: "",
@@ -76,6 +76,7 @@ function PodcastFormModal({ podcast, isOpen, onClose }) {
 				.split(",")
 				.map((tag) => tag.trim())
 				.filter((tag) => tag),
+			type: type,
 		};
 
 		if (podcast) {
@@ -93,7 +94,7 @@ function PodcastFormModal({ podcast, isOpen, onClose }) {
 	const handleDelete = () => {
 		if (
 			podcast &&
-			window.confirm("Are you sure you want to delete this podcast?")
+			window.confirm("Are you sure you want to delete this item?")
 		) {
 			deleteMutation.mutate(podcast._id);
 		}
@@ -101,13 +102,15 @@ function PodcastFormModal({ podcast, isOpen, onClose }) {
 
 	if (!isOpen) return null;
 
+	const title = type === "free_course" ? "Free Course" : "Podcast";
+
 	return (
 		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
 			<div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
 				{/* Header */}
 				<div className="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
 					<h2 className="text-2xl font-bold text-gray-800">
-						{podcast ? "Edit Podcast" : "Add New Podcast"}
+						{podcast ? `Edit ${title}` : `Add New ${title}`}
 					</h2>
 					<button
 						onClick={onClose}
@@ -122,7 +125,7 @@ function PodcastFormModal({ podcast, isOpen, onClose }) {
 					{/* Title */}
 					<div>
 						<label className="block text-sm font-semibold text-gray-700 mb-2">
-							Podcast Title *
+							{title} Title *
 						</label>
 						<input
 							type="text"
@@ -131,7 +134,7 @@ function PodcastFormModal({ podcast, isOpen, onClose }) {
 							onChange={handleChange}
 							required
 							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB0E00] focus:border-transparent"
-							placeholder="Enter podcast title"
+							placeholder={`Enter ${title.toLowerCase()} title`}
 						/>
 					</div>
 
@@ -147,17 +150,17 @@ function PodcastFormModal({ podcast, isOpen, onClose }) {
 							required
 							rows={4}
 							className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#BB0E00] focus:border-transparent resize-none"
-							placeholder="Enter podcast description"
+							placeholder={`Enter ${title.toLowerCase()} description`}
 						/>
 					</div>
 
 					{/* URL */}
 					<div>
 						<label className="block text-sm font-semibold text-gray-700 mb-2">
-							Video/Podcast URL *
+							Video/{title} URL *
 						</label>
 						<input
-							type="url"
+							type="text"
 							name="url"
 							value={formData.url}
 							onChange={handleChange}
@@ -233,8 +236,8 @@ function PodcastFormModal({ podcast, isOpen, onClose }) {
 							{createMutation.isPending || updateMutation.isPending
 								? "Saving..."
 								: podcast
-								? "Update Podcast"
-								: "Add Podcast"}
+								? `Update ${title}`
+								: `Add ${title}`}
 						</button>
 					</div>
 				</form>

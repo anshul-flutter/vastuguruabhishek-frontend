@@ -136,6 +136,11 @@ const menuItems = [
 		icon: <FaVideo size={20} />,
 		children: [
 			{
+				title: "Home Content",
+				path: "/admin/home-content",
+				icon: <FaHome size={17} />,
+			},
+			{
 				title: "Blog Management",
 				path: "/admin/blog-management",
 				icon: <FaBook size={17} />,
@@ -146,9 +151,19 @@ const menuItems = [
 				icon: <FaVideo size={17} />,
 			},
 			{
+				title: "Free Courses",
+				path: "/admin/free-courses",
+				icon: <FaVideo size={17} />,
+			},
+			{
 				title: "Banner Management",
 				path: "/admin/banner-management",
 				icon: <FaBullhorn size={17} />,
+			},
+			{
+				title: "About Us",
+				path: "/admin/edit-about",
+				icon: <FaBook size={17} />,
 			},
 		],
 	},

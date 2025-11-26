@@ -5,8 +5,14 @@ import { HiMiniBuildingOffice2 } from "react-icons/hi2";
 import { MdMenuBook } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-const Services = () => {
+const Services = ({ content }) => {
 	const navigate = useNavigate();
+
+	const title = content?.title ?? "Our Services";
+	const description =
+		content?.subtitle ??
+		"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
 	return (
 		<>
 			<section
@@ -17,13 +23,10 @@ const Services = () => {
 					{/* Left side */}
 					<div className="flex-1 w-full lg:pr-8">
 						<h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-3 sm:mb-4">
-							Our Services
+							{title}
 						</h2>
 						<p className="text-sm sm:text-base lg:text-lg text-gray-600 leading-tight">
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-							eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-							enim ad minim veniam, quis nostrud exercitation ullamco laboris
-							nisi ut aliquip ex ea commodo consequat.
+							{description}
 						</p>
 					</div>
 

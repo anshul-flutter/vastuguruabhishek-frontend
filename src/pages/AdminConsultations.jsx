@@ -6,27 +6,29 @@ import {
 } from "../hooks/useServicesApi";
 import CommonConsultation from "../components/PackagePlans/CommonConsultation";
 
+const logoGradient = "bg-gradient-to-r from-[#610908] to-[#c41210] text-white";
+const whiteButton = "bg-white text-[#610908] hover:bg-gray-100";
+
 const planStyles = {
 	Basic: {
-		gradient: "bg-white text-black border-2 border-gray-200",
-		button: "bg-[#ba3800] text-white",
-		icon: "text-orange-400",
+		gradient: logoGradient,
+		button: whiteButton,
+		icon: "text-white",
 	},
 	Silver: {
-		gradient:
-			"bg-gradient-to-tr from-[#f5f5f5] to-[#dbdbdb] text-black shadow-gray-300",
-		button: "bg-[#ba3800] text-white",
-		icon: "text-orange-400",
+		gradient: logoGradient,
+		button: whiteButton,
+		icon: "text-white",
 	},
 	Gold: {
-		gradient: "bg-gradient-to-tr from-[#ffaa00] to-[#ff8c00] text-white",
-		button: "bg-[#ba3800] text-white",
+		gradient: logoGradient,
+		button: whiteButton,
 		icon: "text-white",
 	},
 	Platinum: {
-		gradient: "bg-gradient-to-tr from-[#a62b3d] to-[#6c69c9] text-white",
-		button: "bg-[#ba3800] text-white",
-		icon: "text-orange-400",
+		gradient: logoGradient,
+		button: whiteButton,
+		icon: "text-white",
 	},
 };
 

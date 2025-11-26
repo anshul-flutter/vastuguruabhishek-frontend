@@ -21,6 +21,7 @@ import HelpSupport from "./components/HelpSupport/HelpSupport";
 import Blogs from "./components/Blogs/Blogs";
 import BlogDetails from "./components/Blogs/BlogDetails";
 import PodcastPage from "./pages/PodcastPage";
+import FreeCoursesPage from "./pages/FreeCoursesPage";
 import PodcastDetails from "./components/Podcasts/PodcastDetails";
 import Contact from "./components/Contact/Contact";
 import ServicesPage from "./pages/Services"; // New services browsing page
@@ -55,8 +56,6 @@ import BooksList from "./components/ProductsManagement/BooksList";
 import CreateBook from "./components/ProductsManagement/CreateBook";
 import EventPaymentManagement from "./components/CourseManagment2/CourseManagment2";
 import StudentProgressTracking from "./components/CourseManagment5/CourseManagment5";
-import ConsultationBookings from "./components/CourseManagment6/CourseManagment6";
-import ConsultationStatusNotify from "./components/CourseManagment7/CourseManagment7";
 import VastuServicesPage from "./components/CourseManagment12/CourseManagment12";
 import RolePermissionPage from "./components/CourseManagment13/CourseManagment13";
 import PaymentSecurityPage from "./components/CourseManagment14/CourseManagment14";
@@ -73,6 +72,8 @@ import Notification2 from "./components/AdminDashboard/Notification2";
 import AdminProfile from "./components/Admin/AdminProfile";
 import ChartComponent from "./components/Admin/ChartComponent";
 import CourseDetailPage from "./pages/CourseDetailPage";
+import EditAboutUs from "./components/AboutUs/EditAboutUs";
+import HomeContentEditor from "./components/Admin/HomeContentEditor";
 
 // New imports for Services and Orders
 import AdminServices from "./pages/AdminServices";
@@ -196,6 +197,7 @@ function App() {
 				<Route path="blogs" element={<Blogs />} />
 				<Route path="blogs/:id" element={<BlogDetails />} />
 				<Route path="podcast" element={<PodcastPage />} />
+				<Route path="free-courses" element={<FreeCoursesPage />} />
 				<Route path="podcast/:id" element={<PodcastDetails />} />
 				<Route path="contact" element={<Contact />} />
 				<Route path="services" element={<ServicesPage />} />
@@ -259,6 +261,7 @@ function App() {
 					<Route path="enquiries" element={<AdminEnquiries />} />
 					<Route path="profile" element={<AdminProfile />} />
 					{/* <Route path="settings" element={<AdminSettings />} /> */}
+					<Route path="edit-about" element={<EditAboutUs />} />
 					<Route path="student-management" element={<StudentManagement />} />
 					<Route path="courses" element={<AdminCourses />} />
 					<Route path="courses/:courseId/edit" element={<CreateCourseForm />} />
@@ -273,14 +276,6 @@ function App() {
 					<Route path="create-event" element={<CreateEvent />} />
 					<Route path="event-payment" element={<EventPaymentManagement />} />
 					{/* Consultation Management */}
-					<Route
-						path="consultation-bookings"
-						element={<ConsultationBookings />}
-					/>
-					<Route
-						path="consultation-status"
-						element={<ConsultationStatusNotify />}
-					/>
 					<Route path="create-package" element={<CreatePackage />} />
 					{/* Services Management - Three Types */}
 					<Route path="consultations" element={<AdminConsultations />} />
@@ -302,14 +297,6 @@ function App() {
 					<Route
 						path="courses/LearningAstrology"
 						element={<StudentProgressTracking />}
-					/>
-					<Route
-						path="courses/ConsultationManagment"
-						element={<ConsultationBookings />}
-					/>
-					<Route
-						path="courses/NotifyStatus"
-						element={<ConsultationStatusNotify />}
 					/>
 					<Route path="courses/VastuServices" element={<VastuServicesPage />} />
 					<Route
@@ -335,9 +322,14 @@ function App() {
 					{/* Content Management */}
 					<Route path="banner-management" element={<BannerManagement />} />
 					<Route path="create-management" element={<CreateManagement />} />
+					<Route path="home-content" element={<HomeContentEditor />} />
 					<Route path="blog-management" element={<BlogManagement />} />
 					<Route path="blog-details/:blogId" element={<AdminBlogDetails />} />
 					<Route path="podcast-management" element={<PodcastManagement />} />
+					<Route
+						path="free-courses"
+						element={<PodcastManagement type="free_course" />}
+					/>
 					<Route
 						path="podcast-details/:podcastId"
 						element={<AdminPodcastDetails />}

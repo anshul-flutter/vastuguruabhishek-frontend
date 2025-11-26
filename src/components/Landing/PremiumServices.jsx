@@ -5,8 +5,13 @@ import icon2 from "../../assets/icon2.png";
 import icon3 from "../../assets/icon3.png";
 import { useNavigate } from "react-router-dom";
 
-const PremiumServices = () => {
+const PremiumServices = ({ content }) => {
 	const navigate = useNavigate();
+
+	const title = content?.title ?? "Premium Services";
+	const subtitle =
+		content?.subtitle ??
+		"Unlock the full potential of your spaces with our comprehensive premium Vastu consultation services.";
 	return (
 		<>
 			{" "}
@@ -15,11 +20,10 @@ const PremiumServices = () => {
 					{/* Header */}
 					<div className="mb-8 sm:mb-12">
 						<h2 className="text-2xl sm:text-3xl font-bold text-black">
-							Premium Services
+							{title}
 						</h2>
 						<p className="text-sm sm:text-base lg:text-lg text-gray-600 mt-2 max-w-2xl mx-auto px-4">
-							Unlock the full potential of your spaces with our comprehensive
-							premium Vastu consultation services.
+							{subtitle}
 						</p>
 					</div>
 

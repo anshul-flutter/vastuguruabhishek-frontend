@@ -1,14 +1,15 @@
 import { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import ebookImg from "../../assets/ebook.png";
 import { useBookQuery } from "../../hooks/useContentApi";
 import { useAddToCartMutation, useCartQuery } from "../../hooks/useCartApi";
 import { useAppSelector } from "../../store/hooks";
 import { selectCurrentUser } from "../../store/slices/authSlice";
 
+const FALLBACK_IMAGE = "/images/fallback.svg";
+
 const buildBannerImage = (book) => {
-	if (!book) return ebookImg;
+	if (!book) return FALLBACK_IMAGE;
 	if (book.coverImageUrl) return book.coverImageUrl;
 	if (book.imageUrl) return book.imageUrl;
 	if (book.coverImage && book.coverImage.startsWith("http"))
@@ -16,7 +17,7 @@ const buildBannerImage = (book) => {
 	if (book.image && book.image.startsWith("http")) return book.image;
 	const baseUrl = import.meta.env.VITE_BACKEND_URL;
 	const candidate = book.coverImage ?? book.image;
-	if (!candidate || !baseUrl) return ebookImg;
+	if (!candidate || !baseUrl) return FALLBACK_IMAGE;
 	const normalized = candidate.startsWith("/") ? candidate.slice(1) : candidate;
 	return `${baseUrl}/${normalized}`;
 };
@@ -39,7 +40,7 @@ export default function BookDetails() {
 	const isAdmin = currentUser?.role === "admin";
 
 	// State
-	const [selectedLanguage, setSelectedLanguage] = useState("English");
+	const [selectedLanguage, setSelectedLanguage] = useState("");
 	const [isAddingToCart, setIsAddingToCart] = useState(false);
 
 	// Hooks
@@ -67,6 +68,13 @@ export default function BookDetails() {
 		};
 	}, [rawBook]);
 
+	// Set default selected language
+	useMemo(() => {
+		if (book?.languageOptions?.length > 0 && !selectedLanguage) {
+			setSelectedLanguage(book.languageOptions[0].language);
+		}
+	}, [book, selectedLanguage]);
+
 	// Check if book is in cart
 	const isBookInCart = useMemo(() => {
 		if (!book || !cartData?.items) return false;
@@ -77,8 +85,22 @@ export default function BookDetails() {
 		);
 	}, [book, cartData]);
 
+	const selectedOption = useMemo(() => {
+		if (!book || !selectedLanguage) return null;
+		return book.languageOptions.find(
+			(opt) => opt.language === selectedLanguage
+		);
+	}, [book, selectedLanguage]);
+
+	const isExternal = !!selectedOption?.buyLink;
+
 	// Add to cart handler
 	const handleAddToCart = () => {
+		if (isExternal) {
+			window.open(selectedOption.buyLink, "_blank");
+			return;
+		}
+
 		if (!currentUser) {
 			toast("Please log in to continue", { icon: "🔐" });
 			navigate("/auth/login", {
@@ -158,38 +180,18 @@ export default function BookDetails() {
 			<main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
 				{/* Hero Section with Book Cover and Quick Info */}
 				<div className="mb-12 overflow-hidden rounded-3xl bg-gradient-to-r from-orange-100 via-orange-50 to-orange-100 shadow-xl">
-					<div className="grid gap-8 p-8 lg:grid-cols-[400px,1fr] lg:gap-12 lg:p-12">
+					<div className="flex flex-col md:flex-row gap-12 p-8 lg:p-12">
 						{/* Book Cover */}
-						<div className="mx-auto w-full max-w-sm">
+						<div className="mx-auto w-full max-w-sm lg:order-last">
 							<div className="aspect-[3/4] overflow-hidden rounded-2xl bg-white shadow-2xl">
-								{book.bannerImage && book.bannerImage !== ebookImg ? (
-									<img
-										src={book.bannerImage}
-										alt={book.title}
-										className="h-full w-full object-cover"
-									/>
-								) : (
-									<div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-100 to-orange-200">
-										<div className="text-center p-8">
-											<svg
-												className="mx-auto h-24 w-24 text-orange-400"
-												fill="none"
-												viewBox="0 0 24 24"
-												stroke="currentColor"
-											>
-												<path
-													strokeLinecap="round"
-													strokeLinejoin="round"
-													strokeWidth={1.5}
-													d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-												/>
-											</svg>
-											<h3 className="mt-4 text-2xl font-bold text-orange-600">
-												{book.title}
-											</h3>
-										</div>
-									</div>
-								)}
+								<img
+									src={book.bannerImage}
+									alt={book.title}
+									onError={(e) => {
+										e.target.src = FALLBACK_IMAGE;
+									}}
+									className="h-full w-full object-fill bg-gray-50"
+								/>
 							</div>
 						</div>
 
@@ -246,16 +248,33 @@ export default function BookDetails() {
 
 									<button
 										onClick={handleAddToCart}
-										disabled={isAddingToCart || isAdmin}
+										disabled={(!isExternal && isAddingToCart) || isAdmin}
 										className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition shadow-lg hover:shadow-xl ${
-											isBookInCart
+											!isExternal && isBookInCart
 												? "bg-green-500 text-white hover:bg-green-600"
-												: isAddingToCart
+												: !isExternal && isAddingToCart
 												? "cursor-not-allowed bg-gray-300 text-gray-500"
 												: "bg-orange-500 text-white hover:bg-orange-600"
 										}`}
 									>
-										{isAddingToCart ? (
+										{isExternal ? (
+											<>
+												<svg
+													className="h-5 w-5"
+													fill="none"
+													viewBox="0 0 24 24"
+													stroke="currentColor"
+												>
+													<path
+														strokeLinecap="round"
+														strokeLinejoin="round"
+														strokeWidth={2}
+														d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+													/>
+												</svg>
+												Buy Online
+											</>
+										) : isAddingToCart ? (
 											<>
 												<svg
 													className="h-5 w-5 animate-spin"
@@ -536,16 +555,33 @@ export default function BookDetails() {
 
 							<button
 								onClick={handleAddToCart}
-								disabled={isAddingToCart || isAdmin}
+								disabled={(!isExternal && isAddingToCart) || isAdmin}
 								className={`w-full rounded-full px-6 py-3 text-center font-semibold transition ${
-									isBookInCart
+									!isExternal && isBookInCart
 										? "bg-green-600 text-white hover:bg-green-700"
-										: isAddingToCart
+										: !isExternal && isAddingToCart
 										? "cursor-not-allowed bg-gray-300 text-gray-500"
 										: "bg-white text-orange-600 hover:bg-orange-50"
 								}`}
 							>
-								{isAddingToCart ? (
+								{isExternal ? (
+									<span className="inline-flex items-center justify-center gap-2">
+										<svg
+											className="h-5 w-5"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth={2}
+												d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+											/>
+										</svg>
+										Buy Online
+									</span>
+								) : isAddingToCart ? (
 									<span className="inline-flex items-center justify-center gap-2">
 										<svg
 											className="h-5 w-5 animate-spin"

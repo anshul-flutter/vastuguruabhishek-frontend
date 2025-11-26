@@ -25,6 +25,8 @@ const ServiceCard = ({
 	isInCart = false,
 	isAdmin = false,
 }) => {
+	const [showAllFeatures, setShowAllFeatures] = React.useState(false);
+
 	const getPlanTier = (price) => {
 		if (price <= 15000) return "Basic";
 		if (price <= 30000) return "Silver";
@@ -34,42 +36,42 @@ const ServiceCard = ({
 
 	const tier = getPlanTier(service.price);
 
+	const logoGradient =
+		"bg-gradient-to-r from-[#610908] to-[#c41210] text-white";
+	const whiteButton = "bg-white text-[#610908] hover:bg-gray-100";
+
 	const planStyles = {
 		Basic: {
-			gradient: "bg-white text-black border-2 border-gray-200",
-			button: "bg-red-600 text-white hover:bg-red-700",
-			icon: "text-orange-400",
-			badge: "bg-orange-100 text-orange-800",
+			gradient: logoGradient,
+			button: whiteButton,
+			icon: "text-white",
+			badge: "bg-white/20 text-white",
 		},
 		Silver: {
-			gradient:
-				"bg-gradient-to-tr from-[#f5f5f5] to-[#dbdbdb] text-black shadow-gray-300",
-			button: "bg-red-600 text-white hover:bg-red-700",
-			icon: "text-orange-400",
-			badge: "bg-gray-200 text-gray-800",
+			gradient: logoGradient,
+			button: whiteButton,
+			icon: "text-white",
+			badge: "bg-white/20 text-white",
 		},
 		Gold: {
-			gradient: "bg-gradient-to-tr from-[#ffaa00] to-[#ff8c00] text-white",
-			button: "bg-red-600 text-white hover:bg-red-700",
+			gradient: logoGradient,
+			button: whiteButton,
 			icon: "text-white",
-			badge: "bg-yellow-100 text-yellow-800",
+			badge: "bg-white/20 text-white",
 		},
 		Platinum: {
-			gradient: "bg-gradient-to-tr from-[#a62b3d] to-[#6c69c9] text-white",
-			button: "bg-red-600 text-white hover:bg-red-700",
-			icon: "text-orange-400",
-			badge: "bg-purple-100 text-purple-800",
+			gradient: logoGradient,
+			button: whiteButton,
+			icon: "text-white",
+			badge: "bg-white/20 text-white",
 		},
 	};
 
 	const style = planStyles[tier];
 
 	const getBadgeColor = () => {
-		if (service.serviceType === "consultation")
-			return "bg-purple-100 text-purple-700";
-		if (service.serviceType === "package")
-			return "bg-indigo-100 text-indigo-700";
-		return "bg-green-100 text-green-700";
+		// Using white/transparent badges for better look on dark gradient
+		return "bg-white/20 text-white";
 	};
 
 	const handleEdit = (e) => {
@@ -166,15 +168,26 @@ const ServiceCard = ({
 				{/* Features */}
 				{service.features && service.features.length > 0 && (
 					<ul className="mt-4 space-y-2">
-						{service.features.slice(0, 4).map((feature, i) => (
+						{(showAllFeatures
+							? service.features
+							: service.features.slice(0, 4)
+						).map((feature, i) => (
 							<li key={i} className="flex items-start gap-2 text-sm">
 								<FaCaretRight className={`${style.icon} mt-1 flex-shrink-0`} />
-								<span className="line-clamp-2 text-left">{feature}</span>
+								<span className="text-left">{feature}</span>
 							</li>
 						))}
 						{service.features.length > 4 && (
-							<li className="text-xs opacity-70 text-center mt-2">
-								+{service.features.length - 4} more features
+							<li
+								className="text-xs opacity-90 text-center mt-2 cursor-pointer hover:underline font-semibold"
+								onClick={(e) => {
+									e.stopPropagation();
+									setShowAllFeatures(!showAllFeatures);
+								}}
+							>
+								{showAllFeatures
+									? "Show less"
+									: `+${service.features.length - 4} more features`}
 							</li>
 						)}
 					</ul>

@@ -3,13 +3,11 @@ import { HiX as X } from "react-icons/hi";
 import {
 	useCreateSessionMutation,
 	useAdminCoursesQuery,
-	useInstructorsQuery,
 } from "../../../hooks/useSessionApi";
 
 const CreateSessionModal = ({ isOpen, onClose }) => {
 	const [formData, setFormData] = useState({
 		courseId: "",
-		instructorId: "",
 		title: "",
 		description: "",
 		sessionNumber: 1,
@@ -21,11 +19,9 @@ const CreateSessionModal = ({ isOpen, onClose }) => {
 
 	const createSessionMutation = useCreateSessionMutation();
 	const { data: courses } = useAdminCoursesQuery();
-	const { data: instructors } = useInstructorsQuery();
 
 	// Debug logging
 	console.log("Courses available:", courses);
-	console.log("Instructors available:", instructors);
 	console.log("Create session mutation:", createSessionMutation);
 
 	useEffect(() => {
@@ -33,7 +29,6 @@ const CreateSessionModal = ({ isOpen, onClose }) => {
 			onClose();
 			setFormData({
 				courseId: "",
-				instructorId: "",
 				title: "",
 				description: "",
 				sessionNumber: 1,
@@ -50,7 +45,6 @@ const CreateSessionModal = ({ isOpen, onClose }) => {
 		console.log("Form submitted with data:", formData);
 		console.log("Validation check:", {
 			courseId: !!formData.courseId,
-			instructorId: !!formData.instructorId,
 			title: !!formData.title,
 			scheduledDate: !!formData.scheduledDate,
 			scheduledTime: !!formData.scheduledTime,
@@ -90,8 +84,6 @@ const CreateSessionModal = ({ isOpen, onClose }) => {
 						<br />
 						Courses available: {courses?.length || 0}
 						<br />
-						Instructors available: {instructors?.length || 0}
-						<br />
 						Loading: {createSessionMutation.isLoading ? "Yes" : "No"}
 						<br />
 						Success: {createSessionMutation.isSuccess ? "Yes" : "No"}
@@ -110,7 +102,7 @@ const CreateSessionModal = ({ isOpen, onClose }) => {
 						)}
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div className="grid grid-cols-1 gap-4">
 						<div>
 							<label className="block text-sm font-medium text-gray-700 mb-1">
 								Course *
@@ -126,26 +118,6 @@ const CreateSessionModal = ({ isOpen, onClose }) => {
 								{courses?.map((course) => (
 									<option key={course._id} value={course._id}>
 										{course.title}
-									</option>
-								))}
-							</select>
-						</div>
-
-						<div>
-							<label className="block text-sm font-medium text-gray-700 mb-1">
-								Instructor *
-							</label>
-							<select
-								name="instructorId"
-								value={formData.instructorId}
-								onChange={handleChange}
-								required
-								className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-							>
-								<option value="">Select an instructor</option>
-								{instructors?.map((instructor) => (
-									<option key={instructor._id} value={instructor._id}>
-										{instructor.name}
 									</option>
 								))}
 							</select>
@@ -242,19 +214,6 @@ const CreateSessionModal = ({ isOpen, onClose }) => {
 								required
 								className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
 							/>
-						</div>
-
-						<div className="flex items-center space-x-2">
-							<input
-								type="checkbox"
-								name="chatEnabled"
-								checked={formData.chatEnabled}
-								onChange={handleChange}
-								className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-							/>
-							<label className="text-sm font-medium text-gray-700">
-								Enable Chat During Session
-							</label>
 						</div>
 					</div>
 

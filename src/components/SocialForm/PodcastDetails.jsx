@@ -26,7 +26,11 @@ function PodcastDetails() {
 
 	const deleteMutation = useDeletePodcastMutation({
 		onSuccess: () => {
-			navigate("/admin/podcast-management");
+			if (podcast?.type === "free_course") {
+				navigate("/admin/free-courses");
+			} else {
+				navigate("/admin/podcast-management");
+			}
 		},
 	});
 
@@ -41,7 +45,11 @@ function PodcastDetails() {
 	};
 
 	const handleBack = () => {
-		navigate("/admin/podcast-management");
+		if (podcast?.type === "free_course") {
+			navigate("/admin/free-courses");
+		} else {
+			navigate("/admin/podcast-management");
+		}
 	};
 
 	// Extract video ID from YouTube URL
@@ -215,6 +223,7 @@ function PodcastDetails() {
 				podcast={podcast}
 				isOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
+				type={podcast.type}
 			/>
 		</div>
 	);

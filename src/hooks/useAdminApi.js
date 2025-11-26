@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import apiClient from "../utils/apiClient";
 
@@ -35,6 +35,46 @@ export const useAdminUsersQuery = (options = {}) => {
 		},
 		select: (data) => (select ? select(data) : data),
 		...queryOptions,
+	});
+};
+
+export const useDeleteUserMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (userId) => {
+			const response = await apiClient.delete(`/admin/users/${userId}`);
+			return response.data;
+		},
+		onSuccess: () => {
+			toast.success("User deleted successfully");
+			queryClient.invalidateQueries(["admin", "students"]);
+		},
+		onError: (error) => {
+			const message = getErrorMessage(error);
+			toast.error(message);
+		},
+	});
+};
+
+export const useUpdateUserRoleMutation = () => {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async ({ userId, role }) => {
+			const response = await apiClient.put(`/admin/users/${userId}/role`, {
+				role,
+			});
+			return response.data;
+		},
+		onSuccess: () => {
+			toast.success("User role updated successfully");
+			queryClient.invalidateQueries(["admin", "students"]);
+		},
+		onError: (error) => {
+			const message = getErrorMessage(error);
+			toast.error(message);
+		},
 	});
 };
 

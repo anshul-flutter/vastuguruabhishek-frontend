@@ -7,6 +7,7 @@ import {
 	TabsTrigger,
 } from "../components/ui/tabs";
 import CourseSessions from "../components/Sessions/CourseSessions";
+import CourseMaterialsList from "../components/Sessions/CourseMaterialsList";
 import { useCourseQuery } from "../hooks/useCoursesApi";
 import { useCourseSessionsQuery } from "../hooks/useSessionApi";
 import { useStudentProgressQuery } from "../hooks/useStudentApi";
@@ -107,7 +108,10 @@ const CourseSessionsPage = () => {
 							<p className="text-gray-600 mb-4">{course.description}</p>
 							<div className="flex items-center gap-6 text-sm text-gray-600 flex-wrap">
 								<span>
-									Instructor: {course.instructor?.name || course.createdBy}
+									Instructor:{" "}
+									{course.instructor?.name ||
+										course.createdBy?.name ||
+										"Unknown Instructor"}
 								</span>
 								<span>
 									Sessions: {sessionProgress.attendedSessions}/
@@ -145,10 +149,9 @@ const CourseSessionsPage = () => {
 			{/* Course Content */}
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<Tabs defaultValue="sessions" className="w-full">
-					<TabsList className="grid w-full grid-cols-4">
+					<TabsList className="grid w-full grid-cols-3">
 						<TabsTrigger value="sessions">Live Sessions</TabsTrigger>
 						<TabsTrigger value="materials">Course Materials</TabsTrigger>
-						<TabsTrigger value="assignments">Assignments</TabsTrigger>
 						<TabsTrigger value="progress">My Progress</TabsTrigger>
 					</TabsList>
 
@@ -157,22 +160,7 @@ const CourseSessionsPage = () => {
 					</TabsContent>
 
 					<TabsContent value="materials" className="space-y-6">
-						<div className="bg-white rounded-lg shadow p-6">
-							<h3 className="text-lg font-semibold mb-4">Course Materials</h3>
-							<div className="text-gray-600">
-								Course materials will be available here including PDFs, videos,
-								and additional resources.
-							</div>
-						</div>
-					</TabsContent>
-
-					<TabsContent value="assignments" className="space-y-6">
-						<div className="bg-white rounded-lg shadow p-6">
-							<h3 className="text-lg font-semibold mb-4">Assignments</h3>
-							<div className="text-gray-600">
-								Course assignments and homework will be displayed here.
-							</div>
-						</div>
+						<CourseMaterialsList materials={course.materials || []} />
 					</TabsContent>
 
 					<TabsContent value="progress" className="space-y-6">

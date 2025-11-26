@@ -30,6 +30,7 @@ const getPageTitle = (pathname) => {
 		"/admin/financial-management": "Financial Management",
 		"/admin/profile": "Admin Profile",
 		"/admin/settings": "Settings",
+		"/admin/edit-about": "Edit About Us",
 	};
 
 	// Check for dynamic routes

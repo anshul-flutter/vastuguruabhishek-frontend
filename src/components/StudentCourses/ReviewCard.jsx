@@ -93,7 +93,7 @@ const ReviewCard = ({ crsDetails, disableActions = false }) => {
 				<h3 className="text-[1.25rem] font-semibold">{crsDetails.title}</h3>
 				<p className="leading-tight">{crsDetails.description}</p>
 				<p className="text-sm text-black/70">
-					Created By: {crsDetails.createdBy}
+					Created By: {crsDetails.createdBy?.name || "Admin"}
 				</p>
 			</div>
 			<div className="flex gap-[.5rem] overflow-hidden rounded-xl  pr-[5px] border-2 border-gray-300 text-gray-700">

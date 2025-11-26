@@ -39,8 +39,17 @@ const BookCard = ({
 		}
 	};
 
+	const selectedOption = book.languageOptions?.find(
+		(opt) => opt.language === selectedLanguage
+	);
+	const isExternal = !!selectedOption?.buyLink;
+
 	const handleAddToCart = (e) => {
 		e.stopPropagation();
+		if (isExternal) {
+			window.open(selectedOption.buyLink, "_blank");
+			return;
+		}
 		if (onAddToCart) {
 			onAddToCart(book, selectedLanguage);
 		}
@@ -149,7 +158,7 @@ const BookCard = ({
 							>
 								View Details
 							</button>
-							{isInCart ? (
+							{isInCart && !isExternal ? (
 								<button
 									onClick={handleViewDetails}
 									className="flex-1 px-3 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
@@ -160,15 +169,23 @@ const BookCard = ({
 							) : (
 								<button
 									onClick={handleAddToCart}
-									disabled={isAddingToCart}
+									disabled={isAddingToCart && !isExternal}
 									className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-										isAddingToCart
+										isAddingToCart && !isExternal
 											? "bg-amber-700 text-white cursor-wait"
 											: "bg-amber-800 text-white hover:bg-amber-900"
 									}`}
 								>
-									<FaShoppingCart />
-									{isAddingToCart ? "Adding..." : "Add to Cart"}
+									{isExternal ? (
+										<>
+											<FaShoppingCart /> Buy Online
+										</>
+									) : (
+										<>
+											<FaShoppingCart />
+											{isAddingToCart ? "Adding..." : "Add to Cart"}
+										</>
+									)}
 								</button>
 							)}
 						</div>

@@ -7,8 +7,13 @@ import icon3 from "../../assets/icon3.png";
 import { MdMenuBook } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
-const FreeServices = () => {
+const FreeServices = ({ content }) => {
 	const navigate = useNavigate();
+
+	const title = content?.title ?? "Free Services";
+	const subtitle =
+		content?.subtitle ??
+		"Discover our complimentary tools designed to help you understand the fundamentals of Vastu and personal astrology.";
 	return (
 		<>
 			{" "}
@@ -33,7 +38,7 @@ const FreeServices = () => {
 								icon: icon3,
 								title: "Free Vastu courses",
 								color: "from-orange-500 to-orange-400",
-								url: "https://www.youtube.com/watch?v=avOuTWxFqEo&list=PLnAXf2e99Pr43Q14NqirgZLLsg5rikciq&pp=gAQB",
+								path: "/free-courses",
 							},
 						].map(({ icon, title, color, path, url }) => (
 							<div
@@ -71,13 +76,10 @@ const FreeServices = () => {
 					{/* Right: Text */}
 					<div className="flex-1 space-y-3 sm:space-y-4 w-full">
 						<h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
-							Free Services
+							{title}
 						</h2>
 						<p className="text-sm sm:text-base text-gray-600 leading-tight">
-							Discover our complimentary tools designed to help you understand
-							the fundamentals of Vastu and personal astrology. Whether you're
-							exploring Kundli charts, decoding numerology, or checking Panchang
-							— our free tools are here to guide your spiritual journey.
+							{subtitle}
 						</p>
 					</div>
 				</div>

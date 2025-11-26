@@ -58,7 +58,7 @@ const CourseDetails = () => {
 					<h3 className="text-2xl font-semibold">{crsDetails.title}</h3>
 					<p className="max-w-[50%]">{crsDetails.description}</p>
 					<p className="text-sm text-white/80">
-						Created By: {crsDetails.createdBy}
+						Created By: {crsDetails.createdBy?.name || "Admin"}
 					</p>
 					<p className="mt-[1rem] flex gap-[10px] items-end">
 						<span className="text-2xl font-semibold">
@@ -74,9 +74,12 @@ const CourseDetails = () => {
 					</p>
 
 					<div className="text-sm flex flex-wrap items-center gap-x-[1rem]">
-						<span className="flex items-center gap-[5px]">
-							<IoCalendarSharp /> Last Updated {crsDetails.lastUpdated}
-						</span>
+						{crsDetails.courseStart && (
+							<span className="flex items-center gap-[5px]">
+								<IoCalendarSharp /> Starts{" "}
+								{new Date(crsDetails.courseStart).toLocaleDateString()}
+							</span>
+						)}
 						<span className="flex items-center gap-[5px]">
 							<MdLanguage size={18} /> {crsDetails.languages?.join(", ")}
 						</span>
@@ -99,7 +102,7 @@ const CourseDetails = () => {
 					<div className="space-y-6">
 						<WhatLearn crsDetails={crsDetails} />
 						{/* Bring course content and requirements into the left column to avoid large whitespace */}
-						<CourseContent crsDetails={crsDetails} />
+						<CourseContent crsDetails={crsDetails} isEnrolled={isEnrolled} />
 						<Requirements crsDetails={crsDetails} />
 					</div>
 				</div>
@@ -284,8 +287,7 @@ const CourseDetails = () => {
 				<p>{crsDetails.detailedDescription}</p>
 			</div>
 
-			<Instructor />
-			<Feedback />
+			<Instructor instructor={crsDetails.createdBy} />
 		</>
 	);
 };

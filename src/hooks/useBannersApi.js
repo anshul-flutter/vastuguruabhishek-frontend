@@ -55,6 +55,7 @@ export const useCreateBannerMutation = () => {
 			formData.append("title", bannerData.title);
 			formData.append("description", bannerData.description);
 			formData.append("buttonText", bannerData.buttonText || "Learn More");
+			formData.append("link", bannerData.link || "");
 			formData.append("background", bannerData.background || "#bb1401");
 			formData.append(
 				"isFullImageBanner",
@@ -99,6 +100,7 @@ export const useUpdateBannerMutation = () => {
 			formData.append("title", bannerData.title);
 			formData.append("description", bannerData.description);
 			formData.append("buttonText", bannerData.buttonText || "Learn More");
+			formData.append("link", bannerData.link || "");
 			formData.append("background", bannerData.background || "#bb1401");
 			formData.append(
 				"isFullImageBanner",

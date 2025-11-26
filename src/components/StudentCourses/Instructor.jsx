@@ -1,12 +1,7 @@
 import React from "react";
 import { BsDot } from "react-icons/bs";
-import { useInstructorsQuery } from "../../hooks/useSessionApi";
 
-const Instructor = () => {
-	// Fetch instructors using React Query
-	const { data: instructors = [] } = useInstructorsQuery();
-	const instructor = instructors[0];
-
+const Instructor = ({ instructor }) => {
 	if (!instructor) {
 		return (
 			<div className="mx-[1.5rem]">
@@ -22,7 +17,6 @@ const Instructor = () => {
 			<p className="font-semibold text-[#BB0E00] mt-[.5rem]">
 				{instructor.name}
 			</p>
-			<p>{instructor.bio}</p>
 			<div className="my-[1rem] flex items-center gap-[2rem]">
 				{instructor.profileImage && (
 					<img
@@ -31,14 +25,16 @@ const Instructor = () => {
 						className="h-[100px] w-[100px] object-cover rounded-full border border-gray-300"
 					/>
 				)}
-				<ul>
-					{instructor.specialties?.map((item, idx) => (
-						<li key={idx} className="flex items-center">
-							<BsDot size={24} />
-							{item}
-						</li>
-					))}
-				</ul>
+				{instructor.expertise && instructor.expertise.length > 0 && (
+					<ul>
+						{instructor.expertise.map((item, idx) => (
+							<li key={idx} className="flex items-center">
+								<BsDot size={24} />
+								{item}
+							</li>
+						))}
+					</ul>
+				)}
 			</div>
 		</div>
 	);

@@ -35,8 +35,14 @@ const buildInitialValues = (course) => {
 		price: toInputValue(safeCourse.price),
 		originalPrice: toInputValue(safeCourse.originalPrice),
 		image: null,
-		createdBy: safeCourse.createdBy ?? "",
+		createdBy:
+			(safeCourse.createdBy && typeof safeCourse.createdBy === "object"
+				? safeCourse.createdBy.name
+				: safeCourse.createdBy) ?? "",
 		lastUpdated: safeCourse.lastUpdated ?? "",
+		courseStart: safeCourse.courseStart
+			? new Date(safeCourse.courseStart).toISOString().split("T")[0]
+			: "",
 		duration: toInputValue(safeCourse.duration),
 		lessons: toInputValue(safeCourse.lessons),
 		progress: toInputValue(safeCourse.progress),
@@ -202,6 +208,7 @@ export default function CreateCourseForm() {
 				originalPrice: toNumber(values.originalPrice),
 				createdBy: values.createdBy.trim(),
 				lastUpdated: values.lastUpdated.trim(),
+				courseStart: values.courseStart,
 				duration: toNumber(values.duration),
 				lessons: toNumber(values.lessons),
 				progress: toNumber(values.progress),
@@ -385,6 +392,19 @@ export default function CreateCourseForm() {
 				onChange={formik.handleChange}
 				className="border border-gray-300 rounded-md p-3 mb-3 focus:ring-2 focus:ring-[#BB0E00] outline-none"
 			/>
+
+			<div className="mb-3">
+				<label className="block text-sm font-medium text-gray-700 mb-1">
+					Course Start Date
+				</label>
+				<input
+					type="date"
+					name="courseStart"
+					value={formik.values.courseStart}
+					onChange={formik.handleChange}
+					className="w-full border border-gray-300 rounded-md p-3 focus:ring-2 focus:ring-[#BB0E00] outline-none"
+				/>
+			</div>
 
 			{/* Numbers */}
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">

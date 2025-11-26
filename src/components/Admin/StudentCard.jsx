@@ -1,27 +1,84 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
 	GlobeAltIcon,
 	EllipsisVerticalIcon,
 } from "@heroicons/react/24/outline";
 import MiniChart from "./MiniChart";
+import {
+	useDeleteUserMutation,
+	useUpdateUserRoleMutation,
+} from "../../hooks/useAdminApi";
 
 const StudentCard = ({ student, onView }) => {
-	const { name, email, phone, dob, _id, createdAt } = student;
+	const { name, email, phone, _id, createdAt } = student;
+	const [showMenu, setShowMenu] = useState(false);
+	const menuRef = useRef(null);
+
+	const deleteUserMutation = useDeleteUserMutation();
+	const updateUserRoleMutation = useUpdateUserRoleMutation();
 
 	// const dobString = `${dob.day}/${dob.month}/${dob.year}`;
 	const joinedDate = new Date(createdAt).toLocaleDateString();
 
+	// Close menu when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (menuRef.current && !menuRef.current.contains(event.target)) {
+				setShowMenu(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
+	const handleDelete = () => {
+		if (window.confirm("Are you sure you want to delete this user?")) {
+			deleteUserMutation.mutate(_id);
+		}
+		setShowMenu(false);
+	};
+
+	const handleMakeAdmin = () => {
+		if (window.confirm("Are you sure you want to make this user an admin?")) {
+			updateUserRoleMutation.mutate({ userId: _id, role: "astrologer" });
+		}
+		setShowMenu(false);
+	};
+
 	return (
-		<div className="bg-white shadow-md rounded-xl w-full max-w-[344px] overflow-hidden">
+		<div className="bg-white shadow-md rounded-xl w-full max-w-[344px] relative">
 			{/* Top gradient header */}
-			<div className="bg-gradient-to-b from-[#BB0E00] to-[#B94400] w-full h-[160px] flex flex-col items-center justify-start pt-3 relative">
+			<div className="bg-gradient-to-b from-[#BB0E00] to-[#B94400] w-full h-[160px] flex flex-col items-center justify-start pt-3 relative rounded-t-xl">
 				{/* Name centered with 3 dots on right */}
-				<div className="flex items-center justify-between w-full px-4">
+				<div className="flex items-center justify-between w-full px-4 relative">
 					<div className="w-5"></div>
 					<h2 className="text-lg font-bold text-white text-center flex-1">
 						{name}
 					</h2>
-					<EllipsisVerticalIcon className="w-5 h-5 text-white cursor-pointer" />
+					<div className="relative" ref={menuRef}>
+						<EllipsisVerticalIcon
+							className="w-5 h-5 text-white cursor-pointer"
+							onClick={() => setShowMenu(!showMenu)}
+						/>
+						{showMenu && (
+							<div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg z-50 py-1">
+								<button
+									onClick={handleMakeAdmin}
+									className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+								>
+									Make Admin
+								</button>
+								<button
+									onClick={handleDelete}
+									className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+								>
+									Delete User
+								</button>
+							</div>
+						)}
+					</div>
 				</div>
 
 				{/* ID and Email */}

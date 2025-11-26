@@ -49,7 +49,13 @@ const normalizeBookForEditing = (book) => {
 		),
 		targetAudience: ensureArray(safe.targetAudience),
 		languageOptions: ensureArray(safe.languageOptions, [
-			{ language: "", stock: 0, buyLink: "", available: true },
+			{
+				language: "",
+				stock: 0,
+				buyLink: "",
+				available: true,
+				purchaseMode: "internal",
+			},
 		]).map((option) => ({
 			_id: option?._id,
 			language: option?.language ?? "",
@@ -61,6 +67,7 @@ const normalizeBookForEditing = (book) => {
 					: option?.available === "false"
 					? false
 					: true,
+			purchaseMode: option?.buyLink ? "external" : "internal",
 		})),
 	};
 };
@@ -162,12 +169,32 @@ const BooksList = () => {
 					stock: 0,
 					buyLink: "",
 					available: true,
+					purchaseMode: "internal",
 				};
 			}
 
 			updated[index] = {
 				...updated[index],
 				[field]: field === "stock" ? Number(value) || 0 : value,
+			};
+
+			return {
+				...prev,
+				languageOptions: updated,
+			};
+		});
+	};
+
+	const handleLanguagePurchaseModeChange = (index, mode) => {
+		setSelectedBook((prev) => {
+			const updated = [...(prev?.languageOptions ?? [])];
+			if (!updated[index]) return prev;
+
+			updated[index] = {
+				...updated[index],
+				purchaseMode: mode,
+				stock: mode === "external" ? 0 : updated[index].stock,
+				buyLink: mode === "internal" ? "" : updated[index].buyLink,
 			};
 
 			return {
@@ -197,7 +224,13 @@ const BooksList = () => {
 			...prev,
 			languageOptions: [
 				...(prev?.languageOptions ?? []),
-				{ language: "", stock: 0, buyLink: "", available: true },
+				{
+					language: "",
+					stock: 0,
+					buyLink: "",
+					available: true,
+					purchaseMode: "internal",
+				},
 			],
 		}));
 	};
@@ -211,7 +244,15 @@ const BooksList = () => {
 				languageOptions:
 					updated.length > 0
 						? updated
-						: [{ language: "", stock: 0, buyLink: "", available: true }],
+						: [
+								{
+									language: "",
+									stock: 0,
+									buyLink: "",
+									available: true,
+									purchaseMode: "internal",
+								},
+						  ],
 			};
 		});
 	};
@@ -566,34 +607,74 @@ const BooksList = () => {
 													className="border rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 													placeholder="Language"
 												/>
-												<input
-													type="number"
-													value={option.stock}
-													min={0}
-													onChange={(event) =>
-														handleLanguageOptionChange(
-															index,
-															"stock",
-															event.target.value
-														)
-													}
-													className="border rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-													placeholder="Stock"
-												/>
-												<input
-													type="text"
-													value={option.buyLink}
-													onChange={(event) =>
-														handleLanguageOptionChange(
-															index,
-															"buyLink",
-															event.target.value
-														)
-													}
-													className="border rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-													placeholder="Buy Link"
-												/>
 											</div>
+
+											<div className="flex items-center gap-4 my-2">
+												<label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+													<input
+														type="radio"
+														name={`purchaseMode-${index}`}
+														checked={option.purchaseMode === "internal"}
+														onChange={() =>
+															handleLanguagePurchaseModeChange(
+																index,
+																"internal"
+															)
+														}
+														className="text-blue-600 focus:ring-blue-500"
+													/>
+													Sell on Website
+												</label>
+												<label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+													<input
+														type="radio"
+														name={`purchaseMode-${index}`}
+														checked={option.purchaseMode === "external"}
+														onChange={() =>
+															handleLanguagePurchaseModeChange(
+																index,
+																"external"
+															)
+														}
+														className="text-blue-600 focus:ring-blue-500"
+													/>
+													External Link
+												</label>
+											</div>
+
+											<div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+												{option.purchaseMode === "internal" ? (
+													<input
+														type="number"
+														value={option.stock}
+														min={0}
+														onChange={(event) =>
+															handleLanguageOptionChange(
+																index,
+																"stock",
+																event.target.value
+															)
+														}
+														className="border rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+														placeholder="Stock"
+													/>
+												) : (
+													<input
+														type="text"
+														value={option.buyLink}
+														onChange={(event) =>
+															handleLanguageOptionChange(
+																index,
+																"buyLink",
+																event.target.value
+															)
+														}
+														className="border rounded p-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent md:col-span-2"
+														placeholder="Buy Link (e.g., Amazon URL)"
+													/>
+												)}
+											</div>
+
 											<div className="flex items-center justify-between">
 												<label className="flex items-center gap-2 text-sm text-gray-600">
 													<input
