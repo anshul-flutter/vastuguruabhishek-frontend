@@ -49,7 +49,7 @@ const PremiumServices = ({ content }) => {
 								color: "from-red-600 to-red-400",
 								text: "text-red-600",
 								icon: icon1,
-								path: "/numero-consultation",
+								path: "/numerologyconsultation",
 							},
 							{
 								title: "Logo Designing Consultation",
