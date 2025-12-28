@@ -78,6 +78,7 @@ const Services = () => {
 			return;
 		}
 
+
 		// Check if already in cart
 		if (isServiceInCart(service._id)) {
 			navigate("/cart");

@@ -3,11 +3,11 @@ import { FaEnvelope, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const services = [
-	{ label: "Vasti For Home", path: "/vastu-home" },
-	{ label: "Vastu For Factory/Commercial", path: "/vastu-industrial" },
+	{ label: "Vasti For Home", path: "/vastu-for-home" },
+	{ label: "Vastu For Factory/Commercial", path: "/vastu-for-factory-commercial-units" },
 	// { label: "Online Consultation", path: "/services/online" },
 	{ label: "Vastu Remedies", path: "/services" },
-	{ label: "Vastu for Office", path: "/vastu-office" },
+	{ label: "Vastu for Office", path: "/vastu-for-office" },
 ];
 
 const quickLinks = [
@@ -137,7 +137,7 @@ const Footer = () => {
 							className="underline"
 							rel="noreferrer"
 						>
-							Alpixn Technologies Private Limited
+							Alpixn
 						</a>
 					</p>
 				</div>

@@ -18,12 +18,12 @@ import NameCalculator from "./components/NameCalculator/NameCalculator";
 import KundliPage from "./pages/KundliPage";
 import AboutUs from "./components/AboutUs/AboutUs";
 import HelpSupport from "./components/HelpSupport/HelpSupport";
-import Blogs from "./components/Blogs/Blogs";
+import BlogPage from "./pages/BlogPage";
 import BlogDetails from "./components/Blogs/BlogDetails";
 import PodcastPage from "./pages/PodcastPage";
 import FreeCoursesPage from "./pages/FreeCoursesPage";
 import PodcastDetails from "./components/Podcasts/PodcastDetails";
-import Contact from "./components/Contact/Contact";
+import Contact from "./pages/Contact";
 import ServicesPage from "./pages/Services"; // New services browsing page
 import ServicePackagesPage from "./pages/ServicePackagesPage"; // Reusable service packages page
 import Books from "./pages/Books";
@@ -108,7 +108,7 @@ function App() {
 
 				{/* Vastu Consultation Services */}
 				<Route
-					path="vastu-home"
+					path="vastu-for-home"
 					element={
 						<ServicePackagesPage
 							title="Vastu for Home Consultations"
@@ -130,7 +130,7 @@ function App() {
 					}
 				/>
 				<Route
-					path="vastu-office"
+					path="vastu-for-office"
 					element={
 						<ServicePackagesPage
 							title="Vastu for Office Consultations"
@@ -141,7 +141,7 @@ function App() {
 					}
 				/>
 				<Route
-					path="vastu-industrial"
+					path="vastu-for-factory-commercial-units"
 					element={
 						<ServicePackagesPage
 							title="Vastu for Industrial Consultations"
@@ -174,7 +174,7 @@ function App() {
 					}
 				/>
 				<Route
-					path="numero-consultation"
+					path="numerologyconsultation"
 					element={
 						<ServicePackagesPage
 							title="Numerology Consultation Packages"
@@ -194,14 +194,15 @@ function App() {
 					}
 				/>
 
-				<Route path="blogs" element={<Blogs />} />
+				<Route path="vastu-blog" element={<BlogPage />} />
+
 				<Route path="blogs/:id" element={<BlogDetails />} />
 				<Route path="podcast" element={<PodcastPage />} />
 				<Route path="free-courses" element={<FreeCoursesPage />} />
 				<Route path="podcast/:id" element={<PodcastDetails />} />
 				<Route path="contact" element={<Contact />} />
 				<Route path="services" element={<ServicesPage />} />
-				<Route path="books" element={<Books />} />
+				<Route path="occult-vastu-astro-numero-books" element={<Books />} />
 				<Route path="books/:id" element={<BookDetails />} />
 
 				<Route element={<RequireAuth />}>

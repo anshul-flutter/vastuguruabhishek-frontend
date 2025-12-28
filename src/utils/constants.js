@@ -73,10 +73,10 @@ export const menuOptions = [
 		label: "Consultation",
 		path: "/consultation",
 		links: [
-			{ label: "Vastu For Office", path: "/vastu-office" },
-			{ label: "Vastu For Home", path: "/vastu-home" },
-			{ label: "Vastu For Factory/Commercial", path: "/vastu-industrial" },
-			{ label: "Numero Consultation", path: "/numero-consultation" },
+			{ label: "Vastu For Office", path: "/vastu-for-office" },
+			{ label: "Vastu For Home", path: "/vastu-for-home" },
+			{ label: "Vastu For Factory/Commercial", path: "/vastu-for-factory-commercial-units" },
+			{ label: "Numero Consultation", path: "/numerologyconsultation" },
 			{ label: "Astrology Consultation", path: "/astrology-consultation" },
 		],
 	},
@@ -84,11 +84,11 @@ export const menuOptions = [
 		label: "Courses",
 		path: "/courses",
 	},
-	{ label: "Blogs", path: "/blogs" },
+	{ label: "Blogs", path: "/vastu-blog" },
 	{ label: "Podcast", path: "/podcast" },
 	{
 		label: "Books",
-		path: "/books",
+		path: "/occult-vastu-astro-numero-books",
 	},
 	{ label: "Contact", path: "/contact" },
 ];

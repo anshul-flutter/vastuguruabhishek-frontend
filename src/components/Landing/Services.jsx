@@ -34,7 +34,7 @@ const Services = ({ content }) => {
 					<div className="flex-1 min-h-[280px] sm:min-h-[350px] flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
 						<div className="flex flex-row sm:flex-col w-full sm:w-1/2 gap-3 sm:gap-4">
 							<div
-								onClick={() => navigate("/vastu-home")}
+								onClick={() => navigate("/vastu-for-home")}
 								className="cursor-pointer hover:scale-102 transition-all .3s ease-in-out p-3 sm:p-4 flex-1 sm:h-[70%] bg-[#ee6340] border border-[#ee6340] rounded-[15px] relative overflow-hidden"
 							>
 								<span className="text-white text-sm sm:text-base lg:text-[1.15rem] font-semibold">
@@ -49,7 +49,7 @@ const Services = ({ content }) => {
 								<div className="h-[60px] w-[60px] sm:h-[100px] sm:w-[100px] absolute bottom-[60%] -right-[20%] rounded-full bg-white/20" />
 							</div>
 							<div
-								onClick={() => navigate("/vastu-industrial")}
+								onClick={() => navigate("/vastu-for-factory-commercial-units")}
 								className="cursor-pointer hover:scale-102 transition-all .3s ease-in-out flex items-center gap-2 sm:gap-4 flex-1 sm:h-[30%] bg-[#1386cb] p-3 sm:p-4 rounded-[15px] relative overflow-hidden"
 							>
 								<BiSolidFactory
@@ -66,7 +66,7 @@ const Services = ({ content }) => {
 						</div>
 						<div className="flex flex-row sm:flex-col w-full sm:w-1/2 gap-3 sm:gap-4">
 							<div
-								onClick={() => navigate("/vastu-office")}
+								onClick={() => navigate("/vastu-for-office")}
 								className="cursor-pointer hover:scale-102 transition-all .3s ease-in-out flex items-center gap-2 sm:gap-4 flex-1 sm:h-[30%] bg-[#1386cb] p-3 sm:p-4 rounded-[15px] relative overflow-hidden"
 							>
 								<HiMiniBuildingOffice2
