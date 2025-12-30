@@ -10,16 +10,19 @@ export default function HomeContentEditor() {
 	const initial = useMemo(
 		() => ({
 			servicesSection: {
+				title: data?.servicesSection?.title ?? "Our Services",
 				subtitle:
 					data?.servicesSection?.subtitle ??
 					"Briefly describe your core offerings here.",
 			},
 			premiumSection: {
+				title: data?.premiumSection?.title ?? "Premium Services",
 				subtitle:
 					data?.premiumSection?.subtitle ??
 					"Explain premium consultations or products.",
 			},
 			freeSection: {
+				title: data?.freeSection?.title ?? "Free Services",
 				subtitle:
 					data?.freeSection?.subtitle ??
 					"Describe free tools and resources offered.",
@@ -84,10 +87,18 @@ export default function HomeContentEditor() {
 				<fieldset className="border border-gray-200 rounded-md p-4">
 					<legend className="px-2 text-sm font-medium">Services Section</legend>
 					<div className="space-y-3">
-						<div className="text-sm text-gray-700">
-							<span className="font-medium">Title:</span>{" "}
-							{data?.servicesSection?.title ?? "Our Services"}
-						</div>
+						<label className="block">
+							<span className="text-sm text-gray-700">Title</span>
+							<input
+								type="text"
+								value={form.servicesSection.title}
+								onChange={(e) =>
+									handleChange("servicesSection", "title", e.target.value)
+								}
+								className="mt-1 w-full border rounded-md px-3 py-2"
+								placeholder="Our Services"
+							/>
+						</label>
 						<label className="block">
 							<span className="text-sm text-gray-700">Subtitle</span>
 							<textarea
@@ -106,10 +117,18 @@ export default function HomeContentEditor() {
 				<fieldset className="border border-gray-200 rounded-md p-4">
 					<legend className="px-2 text-sm font-medium">Premium Section</legend>
 					<div className="space-y-3">
-						<div className="text-sm text-gray-700">
-							<span className="font-medium">Title:</span>{" "}
-							{data?.premiumSection?.title ?? "Premium Services"}
-						</div>
+						<label className="block">
+							<span className="text-sm text-gray-700">Title</span>
+							<input
+								type="text"
+								value={form.premiumSection.title}
+								onChange={(e) =>
+									handleChange("premiumSection", "title", e.target.value)
+								}
+								className="mt-1 w-full border rounded-md px-3 py-2"
+								placeholder="Premium Services"
+							/>
+						</label>
 						<label className="block">
 							<span className="text-sm text-gray-700">Subtitle</span>
 							<textarea
@@ -128,10 +147,18 @@ export default function HomeContentEditor() {
 				<fieldset className="border border-gray-200 rounded-md p-4">
 					<legend className="px-2 text-sm font-medium">Free Section</legend>
 					<div className="space-y-3">
-						<div className="text-sm text-gray-700">
-							<span className="font-medium">Title:</span>{" "}
-							{data?.freeSection?.title ?? "Free Services"}
-						</div>
+						<label className="block">
+							<span className="text-sm text-gray-700">Title</span>
+							<input
+								type="text"
+								value={form.freeSection.title}
+								onChange={(e) =>
+									handleChange("freeSection", "title", e.target.value)
+								}
+								className="mt-1 w-full border rounded-md px-3 py-2"
+								placeholder="Free Services"
+							/>
+						</label>
 						<label className="block">
 							<span className="text-sm text-gray-700">Subtitle</span>
 							<textarea
