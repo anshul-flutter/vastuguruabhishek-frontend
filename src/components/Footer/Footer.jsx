@@ -10,6 +10,8 @@ const services = [
   },
   // { label: "Online Consultation", path: "/services/online" },
   { label: "Vastu for Office", path: "/vastu-for-office" },
+  { label: "Numero Consultation", path: "/numerologyconsultation" },
+  { label: "Astrology Consultation", path: "/astrology-consultation" },
 ];
 
 const quickLinks = [
@@ -17,7 +19,6 @@ const quickLinks = [
   { label: "About", path: "/about" },
   { label: "Services", path: "/services" },
   { label: "Courses", path: "/courses" },
-  { label: "Help", path: "/support" },
 ];
 
 const externalLinks = [
