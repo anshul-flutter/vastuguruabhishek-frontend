@@ -19,76 +19,84 @@
 export const ADMIN_HIDE_GREETING_PATHS = ["/admin/student-management"];
 
 export const ADMIN_TIMEZONE_OPTIONS = [
-	"Asia/Kolkata",
-	"Asia/Dubai",
-	"Europe/London",
-	"UTC",
-	"America/New_York",
+  "Asia/Kolkata",
+  "Asia/Dubai",
+  "Europe/London",
+  "UTC",
+  "America/New_York",
 ];
 
 export const ADMIN_LANGUAGE_OPTIONS = [
-	"English (India)",
-	"English (US)",
-	"Hindi",
-	"Gujarati",
-	"Marathi",
+  "English (India)",
+  "English (US)",
+  "Hindi",
+  "Gujarati",
+  "Marathi",
 ];
 
 export const ADMIN_THEME_OPTIONS = [
-	{ label: "System", value: "system" },
-	{ label: "Light", value: "light" },
-	{ label: "Dark", value: "dark" },
+  { label: "System", value: "system" },
+  { label: "Light", value: "light" },
+  { label: "Dark", value: "dark" },
 ];
 
 export const ADMIN_SETTINGS_DEFAULTS = Object.freeze({
-	preferences: {
-		timezone: "Asia/Kolkata",
-		language: "English (India)",
-		theme: "system",
-	},
-	notifications: {
-		productUpdates: true,
-		marketing: false,
-		security: true,
-		weeklySummary: true,
-	},
-	security: {
-		twoFactor: false,
-		loginAlerts: true,
-		autoSignOutMinutes: 30,
-	},
+  preferences: {
+    timezone: "Asia/Kolkata",
+    language: "English (India)",
+    theme: "system",
+  },
+  notifications: {
+    productUpdates: true,
+    marketing: false,
+    security: true,
+    weeklySummary: true,
+  },
+  security: {
+    twoFactor: false,
+    loginAlerts: true,
+    autoSignOutMinutes: 30,
+  },
 });
 
 export const ADMIN_SECURITY_MIN_TIMEOUT = 5;
 
 export const ROLES = Object.freeze({
-	ADMIN: "admin",
-	ASTROLOGER: "astrologer",
-	STUDENT: "student",
+  ADMIN: "admin",
+  ASTROLOGER: "astrologer",
+  STUDENT: "student",
 });
 
 export const menuOptions = [
-	{ label: "Home", path: "/" },
-	{
-		label: "Consultation",
-		path: "/consultation",
-		links: [
-			{ label: "Vastu For Office", path: "/vastu-for-office" },
-			{ label: "Vastu For Home", path: "/vastu-for-home" },
-			{ label: "Vastu For Factory/Commercial", path: "/vastu-for-factory-commercial-units" },
-			{ label: "Numero Consultation", path: "/numerologyconsultation" },
-			{ label: "Astrology Consultation", path: "/astrology-consultation" },
-		],
-	},
-	{
-		label: "Courses",
-		path: "/courses",
-	},
-	{ label: "Blogs", path: "/vastu-blog" },
-	{ label: "Podcast", path: "/podcast" },
-	{
-		label: "Books",
-		path: "/occult-vastu-astro-numero-books",
-	},
-	{ label: "Contact", path: "/contact" },
+  { label: "Home", path: "/" },
+  {
+    label: "Consultation",
+    path: "/consultation",
+    links: [
+      { label: "Vastu For Office", path: "/vastu-for-office" },
+      { label: "Vastu For Home", path: "/vastu-for-home" },
+      {
+        label: "Vastu For Factory/Commercial",
+        path: "/vastu-for-factory-commercial-units",
+      },
+      { label: "Numero Consultation", path: "/numerologyconsultation" },
+      { label: "Astrology Consultation", path: "/astrology-consultation" },
+    ],
+  },
+  {
+    label: "Courses",
+    path: "/courses",
+  },
+  { label: "Blogs", path: "/vastu-blog" },
+  { label: "Podcast", path: "/podcast" },
+  {
+    label: "Books",
+    path: "/occult-vastu-astro-numero-books",
+  },
+  {
+    label: "Vastuguru",
+    path: "https://www.vastuguru.vastuabhishek.com",
+    target: "_blank",
+  },
+  { label: "Contact", path: "/contact" },
 ];

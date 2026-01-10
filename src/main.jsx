@@ -8,38 +8,40 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			retry: 1,
-			refetchOnWindowFocus: false,
-			staleTime: 1000 * 60 * 5, // 5 minutes - increased for better caching
-			cacheTime: 1000 * 60 * 30, // 30 minutes cache
-			// Enable background refetch but prevent aggressive refetching
-			refetchOnMount: true,
-			refetchOnReconnect: "always",
-			// Reduce network calls by suspending queries when not needed
-			suspense: false,
-		},
-		mutations: {
-			retry: 1,
-		},
-	},
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60 * 5, // 5 minutes - increased for better caching
+      cacheTime: 1000 * 60 * 30, // 30 minutes cache
+      // Enable background refetch but prevent aggressive refetching
+      refetchOnMount: true,
+      refetchOnReconnect: "always",
+      // Reduce network calls by suspending queries when not needed
+      suspense: false,
+    },
+    mutations: {
+      retry: 1,
+    },
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-	<React.StrictMode>
-		<Provider store={store}>
-			<QueryClientProvider client={queryClient}>
-				<HelmetProvider>
-				 <BrowserRouter>
-				    <App />
- 				 </BrowserRouter>
-				</HelmetProvider>
+  <React.StrictMode>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <HelmetProvider>
+          <BrowserRouter>
+            <ScrollToTop />
+            <App />
+          </BrowserRouter>
+        </HelmetProvider>
 
-				<Toaster position="top-right" toastOptions={{ duration: 2000 }} />
-			</QueryClientProvider>
-		</Provider>
-	</React.StrictMode>
+        <Toaster position="top-right" toastOptions={{ duration: 2000 }} />
+      </QueryClientProvider>
+    </Provider>
+  </React.StrictMode>
 );
